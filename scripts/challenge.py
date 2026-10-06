@@ -292,7 +292,7 @@ def cmd_journal(args):
             f.write(f"# {now:%Y-%m-%d %H:%M} ET, {args.run} run (PAPER challenge)\n")
         f.write("\n"
                 f"* Equity {eq:,.2f} | peak {state['peak_equity']:,.2f} | max drawdown "
-                f"{state['max_drawdown_pct']}% | progress to 3x {prog:.1%}\n")
+                f"{state['max_drawdown_pct']}% | progress to target {prog:.1%}\n")
         for line in args.note:
             f.write(f"* {line}\n")
     print(path)
@@ -326,7 +326,7 @@ def realized_trades(fills):
 
 def cmd_summary(args):
     state = paper_guard()
-    hist = get("/v2/account/portfolio/history", {"period": "1W", "timeframe": "1H", "extended_hours": "true"})
+    hist = get("/v2/account/portfolio/history", {"period": "1M", "timeframe": "1H", "extended_hours": "true"})
     eq = [e for e in hist.get("equity", []) if e]
     peak, mdd = 0, 0
     for e in eq:

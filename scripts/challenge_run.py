@@ -369,7 +369,7 @@ def signals():
 
 
 def write_summary(st):
-    hist = ch.get("/v2/account/portfolio/history", {"period": "1W", "timeframe": "1H", "extended_hours": "true"})
+    hist = ch.get("/v2/account/portfolio/history", {"period": "1M", "timeframe": "1H", "extended_hours": "true"})
     peak, mdd = 0, 0
     for e in [e for e in hist.get("equity", []) if e]:
         peak = max(peak, e)
@@ -395,7 +395,7 @@ def write_summary(st):
     md = [f"# Challenge summary (PAPER, {st['start_date']} to {st['target_date']})", "",
           "| | |", "| --- | --- |",
           f"| Start equity | ${st['starting_equity']:,.2f} |", f"| End equity | ${end:,.2f} |",
-          f"| Return | {ret:.1%} |", f"| Target (3x minimum) | ${st['target_equity']:,.0f}, "
+          f"| Return | {ret:.1%} |", f"| Target (5x minimum) | ${st['target_equity']:,.0f}, "
           f"{'reached' if end >= st['target_equity'] else 'not reached'} |",
           f"| Peak / trough equity | ${st['peak_equity']:,.0f} / ${st['trough_equity']:,.0f} |",
           f"| Max drawdown | {mdd:.1f}% |", f"| Round trips | {len(trades)}, win rate "
@@ -414,7 +414,7 @@ def write_summary(st):
           "* Follow `trading/PAPER_PLAN.md`: momentum rotation plus RSI(2) pullbacks on liquid large caps and ETFs, "
           "no leverage, 1% risk per trade, a 15% drawdown halt.",
           "* Expect about 10% to 15% a year with 15% to 25% drawdowns along the way (`research/RESEARCH.md`), "
-          "not 3x in a week.",
+          "not 5x in two weeks.",
           "* Paper trade it for 8 weeks first and only move to real money with written approval.", ""]
     reviews = os.path.join(ch.JOURNAL, "reviews.md")
     if os.path.exists(reviews):  # every daily review and strategy change, in order

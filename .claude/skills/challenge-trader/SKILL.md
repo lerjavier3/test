@@ -1,11 +1,11 @@
 ---
 name: challenge-trader
-description: PAPER ONLY one week aggressive challenge (2026-10-06 to 2026-10-13, $100,000 start, $300,000 minimum target). Margin, shorts, crypto and long calls or puts, around the clock, run by the deterministic loop in scripts/challenge_run.py. Never use with live money. Does not use risk-manager, swing-trader or day-trader.
+description: PAPER ONLY aggressive challenge (2026-10-06 to 2026-10-20, $100,000 start, $500,000 minimum target, no cap). Margin, shorts, crypto and long calls or puts, around the clock, run by the deterministic loop in scripts/challenge_run.py. Never use with live money. Does not use risk-manager, swing-trader or day-trader.
 ---
 
 # Challenge Trader (PAPER ONLY)
 
-The user asked for an aggressive paper experiment: whole $100,000, leverage, around the clock, 3x as a minimum by 2026-10-13. **3x in a week is extremely unlikely and the most likely result is a large loss.** Never write or imply otherwise.
+The user asked for an aggressive paper experiment: whole $100,000, leverage, around the clock, 5x as a minimum by 2026-10-20 (changed on 2026-10-06 from 3x by 2026-10-13). **5x in two weeks is extremely unlikely and the most likely result is a large loss.** Never write or imply otherwise.
 
 These rules must **never** be used with live money. `risk-manager`, `swing-trader` and `day-trader` stay the rules for real money.
 
@@ -29,8 +29,8 @@ These rules must **never** be used with live money. `risk-manager`, `swing-trade
 * **Sessions:** regular: longs, shorts (before 15:40 only), crypto, options. Pre, post, overnight: stock longs with extended hours limits, crypto. Weekend: crypto.
 * **Options:** once a day between 09:35 and 11:00 ET, buy the QQQ call (first 5 minute bar up) or put (down), nearest expiry 1 to 4 days out, strike nearest the money, at most 8% of equity in premium. Exit at minus 50%, plus 100%, or 15:45 ET the day before expiry.
 * **Exits:** stop hit, signal flipped against the position, option rules, leverage trim (biggest loser first).
-* **Target:** $300,000 is a minimum, not a cap. Risk doesn't change when it is reached.
-* **End:** the last stock session is 2026-10-12; at 15:50 ET it closes all stocks and options, then only crypto trades. At 04:30 ET on 2026-10-13 (before the user checks at 18:00 SGT) it cancels all orders, closes everything, writes `trading/journal/challenge-summary.md`, sets `challenge_active` false and exits.
+* **Target:** $500,000 is a minimum, not a cap; keep pushing as high as possible. Risk doesn't change when it is reached.
+* **End:** the last stock session is 2026-10-19; at 15:50 ET it closes all stocks and options, then only crypto trades. At 04:30 ET on 2026-10-20 (before the user checks at 18:00 SGT) it cancels all orders, closes everything, writes `trading/journal/challenge-summary.md`, sets `challenge_active` false and exits.
 
 ## Files
 

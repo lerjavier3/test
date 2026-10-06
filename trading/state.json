@@ -10,11 +10,11 @@
   "equity_floor": 0,
   "challenge_active": true,
   "options_level": 3,
-  "peak_equity": 101415.59,
+  "peak_equity": 101541.67,
   "trough_equity": 99787.74,
   "max_drawdown_pct": 0.21,
-  "last_equity": 101415.59,
-  "last_run_et": "2026-10-06T10:08-04:00",
+  "last_equity": 101541.67,
+  "last_run_et": "2026-10-06T10:14-04:00",
   "mental_stops": {
     "SPY": {
       "stop": 775.99,
@@ -24,12 +24,12 @@
       "stop": 361.49,
       "side": "buy"
     },
-    "IWM": {
-      "stop": 283.05,
-      "side": "buy"
-    },
     "TSLA": {
       "stop": 376.63,
+      "side": "buy"
+    },
+    "QQQ": {
+      "stop": 758.31,
       "side": "buy"
     }
   },
@@ -54,6 +54,7 @@
     1.94,
     1.94,
     1.94,
+    1.93,
     1.93
   ],
   "last_options_day": "2026-10-06"

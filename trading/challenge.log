@@ -16,3 +16,4 @@
 [10-06 09:58] 09:58 ET regular: equity 100,921, peak 100,921, max dd 0.21%, lev 1.94x, progress 0%, positions 6
 [10-06 10:03] 10:03 ET regular: equity 100,951, peak 100,951, max dd 0.21%, lev 1.94x, progress 0%, positions 6
 [10-06 10:08] 10:08 ET regular: equity 101,416, peak 101,416, max dd 0.21%, lev 1.93x, progress 1%, positions 6
+[10-06 10:14] 10:14 ET regular: equity 101,542, peak 101,542, max dd 0.21%, lev 1.93x, progress 1%, positions 5 | filled 210 @ 282.925667: sell 210 IWM market (close: stop 283.05 hit at 282.91) [ch-IWM-202610061014-1] | filled 133 @ 761.157217: buy 133 QQQ limit @762.71 stop 758.31 (long, regular) [ch-QQQ-202610061014-2]

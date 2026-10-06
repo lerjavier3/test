@@ -41,8 +41,8 @@ python3 day.py ../../data_cache ../results/day_results.md
 
 ## Paper challenge mode (never with live money)
 
-`trading/state.json` currently has `"mode": "paper_challenge"`: a one week aggressive paper experiment the user asked for ($100,000 to a $300,000 target by 2026-10-13, with margin, shorts, crypto and long calls or puts, around the clock). Its rules are in `.claude/skills/challenge-trader/` and run as a background loop of `scripts/challenge_run.py` (see `trading/RUNNER.md`). The $300,000 target is a minimum, not a cap: the loop keeps trading the same way after reaching it.
+`trading/state.json` currently has `"mode": "paper_challenge"`: an aggressive paper experiment the user asked for ($100,000 to a $500,000 minimum target, no cap, by 2026-10-20, with margin, shorts, crypto and long calls or puts, around the clock). Its rules are in `.claude/skills/challenge-trader/` and run as a background loop of `scripts/challenge_run.py` (see `trading/RUNNER.md`). The $300,000 target is a minimum, not a cap: the loop keeps trading the same way after reaching it.
 
 * **The challenge rules must never be used with live money.** `scripts/challenge.py` refuses to run on anything but the paper endpoint.
-* Reaching 3x in a week is extremely unlikely; the most likely outcome is a large loss. It is a stress test of the plumbing and an illustration of what leverage does, not a plan.
+* Reaching 5x in two weeks is extremely unlikely; the most likely outcome is a large loss. It is a stress test of the plumbing and an illustration of what leverage does, not a plan.
 * The conservative `risk-manager`, `swing-trader` and `day-trader` rules are unchanged and remain the only rules for any real money use. They don't run while the challenge mode is active. After the challenge, reset `trading/state.json` to the `"mode": "paper"` structure in the risk manager skill before using them.

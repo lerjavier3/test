@@ -14,8 +14,8 @@ run overnight 23:00
 run overnight 02:00 --pos
 run pre 07:00 --pos
 run closed 12:00
-run regular 15:52 2026-10-12 --pos
-run overnight 22:00 2026-10-12
-run pre 04:31 2026-10-13 --pos
+run regular 15:52 2026-10-19 --pos
+run overnight 22:00 2026-10-19
+run pre 04:31 2026-10-20 --pos
 python3 scripts/challenge_run.py --once --dry-run >/dev/null 2>&1 || { echo "FAIL live dry run"; fail=1; }
 exit $fail
