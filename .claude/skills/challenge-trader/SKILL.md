@@ -16,7 +16,7 @@ These rules must **never** be used with live money. `risk-manager`, `swing-trade
 | Guard | Rule |
 | --- | --- |
 | Paper only | Refuses unless the endpoint is paper, `ALPACA_PAPER` is not `false` and `state.json` mode is `paper_challenge` (exit 2). |
-| Equity floor | Below **$25,000** equity: no new trades, exits only. |
+| Equity floor | Removed by the user on 2026-10-06 (`equity_floor` 0). Alpaca itself may restrict a low account. |
 | Options | Buy calls or puts only, never sell to open. |
 | Stops | Every stock entry has a bracket stop (regular hours) and a mental stop checked every tick; crypto gets a broker stop_limit; options exit at minus 50%. |
 | Hygiene | Unique `client_order_id` per order (`ch-<SYMBOL>-<YYYYMMDDHHMM>-<n>`), fill confirmed, unfilled limits canceled. |

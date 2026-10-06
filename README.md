@@ -17,7 +17,7 @@ Research and playbooks for an automated trading routine run by Claude Code on a 
 | `trading/PAPER_PLAN.md` | Which strategies run first, paper test phases and the bar for real money |
 | `.claude/skills/challenge-trader/` | **PAPER ONLY** one week aggressive challenge (margin, shorts, crypto, long options, 24/7) |
 | `scripts/challenge_run.py` | Deterministic challenge runner: one tick or a self running loop (`--loop`, `--dry-run`) |
-| `scripts/challenge.py`, `scripts/challenge_push.sh` | Challenge helpers (paper guard, $25,000 floor, signals, guarded manual orders, summary) and conflict safe push |
+| `scripts/challenge.py`, `scripts/challenge_push.sh` | Challenge helpers (paper guard, equity floor from state.json, signals, guarded manual orders, summary) and conflict safe push |
 | `trading/RUNNER.md` | How the challenge loop runs, the check ins and the daily strategy review |
 | `scripts/challenge_test.sh` | Dry run tests of the runner across every session (no orders) |
 | `trading/` | Also holds the runtime state file and the journal |

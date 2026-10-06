@@ -7,7 +7,7 @@
   "target_date": "2026-10-13",
   "stocks_end_et": "2026-10-12T15:50",
   "end_after_et": "2026-10-13T04:30",
-  "equity_floor": 25000,
+  "equity_floor": 0,
   "challenge_active": true,
   "options_level": 3,
   "peak_equity": 100951.19,
