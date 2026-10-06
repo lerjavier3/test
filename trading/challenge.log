@@ -20,3 +20,8 @@
 [10-06 10:19] 10:19 ET regular: equity 101,664, peak 101,664, max dd 0.21%, lev 2.34x, progress 1%, positions 6
 max minutes reached, exiting for restart
 [10-06 10:24] 10:24 ET regular: equity 101,496, peak 101,664, max dd 0.21%, lev 2.35x, progress 0%, positions 6
+[10-06 10:29] 10:29 ET regular: equity 101,083, peak 101,664, max dd 0.57%, lev 2.35x, progress 0%, positions 6
+[10-06 10:34] 10:34 ET regular: equity 101,131, peak 101,664, max dd 0.57%, lev 2.35x, progress 0%, positions 6
+[10-06 10:40] 10:40 ET regular: equity 101,448, peak 101,664, max dd 0.57%, lev 2.35x, progress 0%, positions 6
+[10-06 10:45] 10:45 ET regular: equity 101,744, peak 101,744, max dd 0.57%, lev 2.34x, progress 0%, positions 6
+[10-06 10:55] 10:55 ET regular: equity 101,886, peak 101,886, max dd 0.57%, lev 2.34x, progress 0%, positions 6 | filled 388 @ 242.242346: buy 388 NVDA limit @242.69 stop 236.97 (breakout long, regular) [ch-breakout-NVDA-202610061055-1] | REJECTED buy 45 MSFT limit @535.37 stop 520.81 (breakout long, regular): {'error': '{"buying_power":"0","code":40310000,"cost_basis":"24091.66","message":"insufficient buying power"}'} | REJECTED buy 37 AMD limit @654.81 stop 628.21 (orb long, regular): {'error': '{"buying_power":"0","code":40310000,"cost_basis":"24227.98","message":"insufficient buying power"}'}

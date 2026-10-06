@@ -10,11 +10,11 @@
   "equity_floor": 0,
   "challenge_active": true,
   "options_level": 3,
-  "peak_equity": 101663.53,
+  "peak_equity": 101886.41,
   "trough_equity": 99787.74,
-  "max_drawdown_pct": 0.21,
-  "last_equity": 101495.72,
-  "last_run_et": "2026-10-06T10:24-04:00",
+  "max_drawdown_pct": 0.57,
+  "last_equity": 101886.41,
+  "last_run_et": "2026-10-06T10:55-04:00",
   "mental_stops": {
     "SPY": {
       "stop": 775.99,
@@ -30,6 +30,10 @@
     },
     "QQQ": {
       "stop": 758.31,
+      "side": "buy"
+    },
+    "NVDA": {
+      "stop": 236.97,
       "side": "buy"
     }
   },
@@ -57,7 +61,59 @@
     1.93,
     1.93,
     2.34,
-    2.35
+    2.35,
+    2.35,
+    2.35,
+    2.35,
+    2.34,
+    2.34
   ],
-  "last_options_day": "2026-10-06"
+  "last_options_day": "2026-10-06",
+  "weights": {
+    "breakout": 0.4,
+    "overnight": 0.4,
+    "orb": 0.2
+  },
+  "owners": {
+    "AVGO": {
+      "strategy": "trend",
+      "side": "long",
+      "entry_time": "2026-10-06T10:55-04:00"
+    },
+    "BTC/USD": {
+      "strategy": "trend",
+      "side": "long",
+      "entry_time": "2026-10-06T10:55-04:00"
+    },
+    "ETH/USD": {
+      "strategy": "trend",
+      "side": "long",
+      "entry_time": "2026-10-06T10:55-04:00"
+    },
+    "QQQ": {
+      "strategy": "trend",
+      "side": "long",
+      "entry_time": "2026-10-06T10:55-04:00"
+    },
+    "SPY": {
+      "strategy": "trend",
+      "side": "long",
+      "entry_time": "2026-10-06T10:55-04:00"
+    },
+    "TSLA": {
+      "strategy": "trend",
+      "side": "long",
+      "entry_time": "2026-10-06T10:55-04:00"
+    },
+    "NVDA": {
+      "strategy": "breakout",
+      "side": "long",
+      "stop": 236.9695,
+      "entry_time": "2026-10-06T10:55-04:00"
+    }
+  },
+  "cooldown": {},
+  "orb_done": {
+    "2026-10-06": []
+  }
 }

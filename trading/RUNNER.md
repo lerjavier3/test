@@ -32,15 +32,17 @@ Each check in, a handful of tool calls:
 4. **Daily review**, only if it is a weekday, after 16:00 ET, and `trading/journal/reviews.md` has no entry for today (ET): do the review below.
 5. Hard stop: if the loop failed to start or had crashed (exit 3 in the log) on this check in and the previous one, don't schedule another. Log why in `trading/journal/errors.md` and push.
 6. If `challenge_active` is false: confirm `trading/journal/challenge-summary.md` exists, push, stop scheduling.
-7. Otherwise schedule the next check in (same message), 60 or 240 minutes out as above. Reply in 2 lines at most.
+7. Otherwise schedule the next check in (same message), 60 or 240 minutes out as above. Reply with one word, "ok" (or "failed: <reason>"). Never send the user reports during the challenge.
 
 ## Daily review (once a day, first check in after the US close)
 
-1. Read today's `trading/journal/YYYY-MM-DD.md`, `tail -40 trading/challenge.log` and `python3 scripts/challenge.py summary`.
-2. Judge what worked and what didn't: trades, stops hit, signals that never fired, errors, gaps. A short web search is fine if it helps, for example scheduled market events for the next session.
-3. The user allows researching, testing and switching strategies whenever it helps reach $500,000 or more by the deadline (also outside this daily review). Keep strategies simple and basic, no elaborate machinery. Every number written to the journal or reviews comes from Alpaca (account, positions, fills), never estimated.
-   To change it, edit `scripts/challenge_run.py`. Allowed: anything within the same paper challenge. Never removed: the paper only guard, a stop on every position, buy only options, unique order ids, the 1.9x overnight cap and the 2026-10-20 04:30 ET end.
-4. `bash scripts/challenge_test.sh` must pass. If it fails and can't be fixed quickly, revert the change.
-5. Restart the loop: `pkill -f "^python3 scripts/challenge_run.py --loop"`, then start it as in step 2.
-6. Append to `trading/journal/reviews.md`: `## YYYY-MM-DD`, equity and day P&L, what happened, the change made (or "no change") and why. The final summary includes this file.
-7. Commit the code and journal, then `bash scripts/challenge_push.sh`.
+Quiet: never message the user during the challenge. Everything goes into the journal files.
+
+1. `python3 scripts/strategy_backtest.py` (backtests every strategy in `scripts/strategies.py` on 400 days, in sample vs the last 120 days out of sample, plus live results from Alpaca fills) refreshes `trading/journal/strategy-scoreboard.md`. Read it with today's `trading/journal/YYYY-MM-DD.md` and `tail -40 trading/challenge.log`.
+2. Search for better strategies every day, even when one works: add simple variants or new ideas to `scripts/strategy_search.py` and run it. Rank on in sample only (at least 30 trades), then check out of sample. Want a high win rate AND average win bigger than average loss (profit factor above 1 in both periods). Research only what can improve results.
+3. Promote a variant by adding it to `scripts/strategies.py` (simple rules, a `rules` text precise enough to trade by hand) and giving it a weight.
+4. Allocation (`weights` in `trading/state.json`, 2 or 3 strategies live, weights sum to 1): judge a live strategy after 15 to 20 trades unless clearly broken, then move weight toward the best live and out of sample results. A strategy at weight 0 opens nothing new but still manages its open positions.
+5. Never removed: paper only guard, a stop on every trade, one position per symbol (no doubling down, no opposite positions), the re-entry cooldown, no single trade risking the account, combined leverage caps, the 2026-10-20 04:30 ET end. No new trade right after a loss in the same symbol.
+6. `bash scripts/challenge_test.sh` must pass. Edit `trading/state.json` only while the loop is stopped (it rewrites the file every tick): stop the background task, edit, test, restart it (Check in step 2).
+7. Append to `trading/journal/reviews.md`: `## YYYY-MM-DD`, Alpaca equity, what happened, what was tested, the change (or "no change") and why.
+8. Commit code and journal, then `bash scripts/challenge_push.sh`.
