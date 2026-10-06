@@ -126,7 +126,7 @@ class Tick:
         self.orders = ch.get("/v2/orders", {"status": "open", "limit": 200})
         clock = ch.get("/v2/clock")
         self.session = ch.session_now(clock)
-        self.closed = set()
+        self.closed, self.stocks_done = set(), False
         eq = self.equity = float(acct["equity"])
         st["peak_equity"] = max(st["peak_equity"], eq)
         st["trough_equity"] = min(st["trough_equity"], eq)
@@ -139,10 +139,16 @@ class Tick:
         st["leverage_samples"] = st["leverage_samples"][-2000:]
 
         end = datetime.datetime.fromisoformat(st["end_after_et"]).replace(tzinfo=ET)
-        if self.now >= end - datetime.timedelta(minutes=10) or not st.get("challenge_active", True):
+        if self.now >= end or not st.get("challenge_active", True):
             return self.finish()
+        stocks_end = datetime.datetime.fromisoformat(st["stocks_end_et"]).replace(tzinfo=ET)
+        self.stocks_done = self.now >= stocks_end  # after the last stock session only crypto trades
 
         self.signals = {s["symbol"]: s for s in signals()}
+        if self.stocks_done:
+            for p in self.positions:
+                if p["asset_class"] != "crypto":
+                    self.close(p, "last stock session is over")
         self.manage(acct)
         can_open = eq >= st["equity_floor"] and not acct.get("trading_blocked")
         if not can_open:
@@ -156,6 +162,8 @@ class Tick:
         stops = self.state.setdefault("mental_stops", {})
         for p in list(self.positions):
             sym, px, qty = p["symbol"], float(p["current_price"]), float(p["qty"])
+            if sym in self.closed:
+                continue
             if p["asset_class"] == "us_option":
                 entry = float(p["avg_entry_price"])
                 exp = datetime.date(2000 + int(sym[-15:-13]), int(sym[-13:-11]), int(sym[-11:-9]))
@@ -197,7 +205,7 @@ class Tick:
         cash_crypto = float(acct.get("non_marginable_buying_power") or 0)
         risk = RISK * self.equity * (1 if self.session == "regular" else 0.5)
 
-        if self.session == "regular" and self.now.weekday() < 5:
+        if self.session == "regular" and self.now.weekday() < 5 and not self.stocks_done:
             self.options_open(acct)
 
         ranked = sorted(self.signals.values(), key=lambda s: -(abs(s.get("last", 0) - s.get("ema20", 0)) / s["atr14_1h"]) if s.get("atr14_1h") else 0)
@@ -208,7 +216,7 @@ class Tick:
             if sym in held or sym in working or sym.replace("/", "") in working:
                 continue
             crypto = "/" in sym
-            if not crypto and self.session == "closed":
+            if not crypto and (self.session == "closed" or self.stocks_done):
                 continue
             if sig == "short_breakdown" and (crypto or not day):  # shorts can't be covered overnight
                 continue
@@ -311,8 +319,10 @@ class Tick:
         if not self.dry:
             alpaca.request("DELETE", f"{API}/v2/orders")
             time.sleep(2)
-            s, d = alpaca.request("DELETE", f"{API}/v2/positions", {"cancel_orders": "true"})
-            self.notes.append(f"liquidate http {s}")
+        self.orders = []
+        for p in self.positions:  # crypto at market; any stock left uses an extended hours limit
+            self.close(p, "challenge over")
+        if not self.dry:
             time.sleep(10)
             st["challenge_active"] = False
             write_summary(st)

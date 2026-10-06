@@ -144,7 +144,7 @@ def cmd_preflight(args):
         "progress_to_target": round((equity - state["starting_equity"]) /
                                     (state["target_equity"] - state["starting_equity"]), 3),
         "can_open_new": not reasons, "blocked_because": reasons,
-        "is_final_run": now >= end - datetime.timedelta(minutes=15),
+        "is_final_run": now >= end,
         "positions": [{k: p[k] for k in ("symbol", "asset_class", "side", "qty", "avg_entry_price",
                                          "current_price", "unrealized_pl", "unrealized_plpc")} for p in positions],
         "open_orders": [{k: o.get(k) for k in ("client_order_id", "symbol", "side", "type", "qty",

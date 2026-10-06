@@ -30,7 +30,7 @@ These rules must **never** be used with live money. `risk-manager`, `swing-trade
 * **Options:** once a day between 09:35 and 11:00 ET, buy the QQQ call (first 5 minute bar up) or put (down), nearest expiry 1 to 4 days out, strike nearest the money, at most 8% of equity in premium. Exit at minus 50%, plus 100%, or 15:45 ET the day before expiry.
 * **Exits:** stop hit, signal flipped against the position, option rules, leverage trim (biggest loser first).
 * **Target:** $300,000 is a minimum, not a cap. Risk doesn't change when it is reached.
-* **End:** at 15:50 ET on 2026-10-13 it cancels all orders, closes all positions, writes `trading/journal/challenge-summary.md`, sets `challenge_active` false and exits.
+* **End:** the last stock session is 2026-10-12; at 15:50 ET it closes all stocks and options, then only crypto trades. At 04:30 ET on 2026-10-13 (before the user checks at 18:00 SGT) it cancels all orders, closes everything, writes `trading/journal/challenge-summary.md`, sets `challenge_active` false and exits.
 
 ## Files
 
