@@ -20,7 +20,7 @@ Required network hosts: `paper-api.alpaca.markets`, `data.alpaca.markets` (and `
 
 ## Phase 1: research that needs Alpaca data (first session)
 
-1. Pull QQQ and SPY 1 minute bars from 2016 to now and backtest ORB with 1 to 2 bps spread and slippage per side. Also backtest Plan B (noise area) from `.claude/skills/day-trader/SKILL.md`.
+1. Pull QQQ and SPY 1 minute bars from 2016 to now (use `--feed sip`; the free IEX feed only goes back to mid 2020 and has thin volume) and backtest ORB with 1 to 2 bps spread and slippage per side. Also backtest Plan B (noise area) from `.claude/skills/day-trader/SKILL.md`.
 2. Rerun the momentum rotation on the exact live universe with Alpaca daily bars through today.
 3. Write the results into `research/results/` and update `research/RESEARCH.md` section 7.
 

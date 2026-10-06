@@ -13,6 +13,7 @@ Examples:
   python3 scripts/alpaca.py cancel-all
 """
 import argparse
+import datetime
 import json
 import os
 import sys
@@ -81,13 +82,16 @@ def cmd_check(args):
         report["config"] = cfg
     s, clock = request("GET", f"{api}/v2/clock")
     report["clock"] = clock if s == 200 else {"http": s, "error": clock}
+    # Without a start date Alpaca only returns today's bars, which is empty before the open.
+    start = (datetime.date.today() - datetime.timedelta(days=14)).isoformat()
     s, bars = request("GET", f"{DATA_URL}/v2/stocks/SPY/bars",
-                      {"timeframe": "1Day", "limit": 5, "feed": args.feed, "adjustment": "all"})
+                      {"timeframe": "1Day", "start": start, "limit": 5, "feed": args.feed, "adjustment": "all"})
     report["daily_bars_http"] = s
     report["daily_bars_ok"] = s == 200 and bool((bars or {}).get("bars"))
+    # Long minute history comes from the SIP feed (free when older than 15 minutes).
     s, mins = request("GET", f"{DATA_URL}/v2/stocks/QQQ/bars",
-                      {"timeframe": "1Min", "start": "2020-01-02T14:30:00Z",
-                       "end": "2020-01-02T14:40:00Z", "feed": args.feed})
+                      {"timeframe": "1Min", "start": "2018-01-02T14:30:00Z",
+                       "end": "2018-01-02T14:40:00Z", "feed": "sip"})
     report["minute_history_http"] = s
     report["minute_history_ok"] = s == 200 and bool((mins or {}).get("bars"))
     s, crypto = request("GET", f"{DATA_URL}/v1beta3/crypto/us/latest/trades", {"symbols": "BTC/USD"})
