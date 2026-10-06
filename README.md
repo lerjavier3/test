@@ -15,7 +15,10 @@ Research and playbooks for an automated trading routine run by Claude Code on a 
 | `.claude/skills/day-trader/` | Intraday Opening Range Breakout routine (experimental) |
 | `scripts/alpaca.py` | Standard library Alpaca client (paper by default), used when the Alpaca MCP isn't connected |
 | `trading/PAPER_PLAN.md` | Which strategies run first, paper test phases and the bar for real money |
-| `trading/` | Also holds the runtime state file and daily journal |
+| `.claude/skills/challenge-trader/` | **PAPER ONLY** one week aggressive challenge (margin, shorts, crypto, long options, 24/7) |
+| `scripts/challenge.py`, `scripts/challenge_push.sh` | Challenge engine (paper guard, $25,000 floor, signals, guarded orders, journal, summary) and conflict safe push |
+| `trading/ROUTINES.md` | The scheduled Routines for the challenge and their prompts |
+| `trading/` | Also holds the runtime state file and the journal |
 
 ## Rerun the backtests
 
@@ -33,3 +36,11 @@ python3 day.py ../../data_cache ../results/day_results.md
 3. Alpaca MCP server connected (optional: `scripts/alpaca.py` covers everything the skills need)
 4. Budget, target amount and target date written into `trading/state.json`
 5. Scheduled runs: 09:36 ET (day entry), 15:45 ET (swing), 15:50 ET (day exit), on market days
+
+## Paper challenge mode (never with live money)
+
+`trading/state.json` currently has `"mode": "paper_challenge"`: a one week aggressive paper experiment the user asked for ($100,000 to a $300,000 target by 2026-10-13, with margin, shorts, crypto and long calls or puts, around the clock). It is run by `.claude/skills/challenge-trader/` and the Routines in `trading/ROUTINES.md`.
+
+* **The challenge rules must never be used with live money.** `scripts/challenge.py` refuses to run on anything but the paper endpoint.
+* Reaching 3x in a week is extremely unlikely; the most likely outcome is a large loss. It is a stress test of the plumbing and an illustration of what leverage does, not a plan.
+* The conservative `risk-manager`, `swing-trader` and `day-trader` rules are unchanged and remain the only rules for any real money use. They don't run while the challenge mode is active. After the challenge, reset `trading/state.json` to the `"mode": "paper"` structure in the risk manager skill before using them.

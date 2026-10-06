@@ -11,6 +11,8 @@ Examples:
   python3 scripts/alpaca.py bars SPY --timeframe 1Day --limit 260
   python3 scripts/alpaca.py order QQQ buy 10 --limit 480.10 --stop 476.50 --tp 520 --id day-QQQ-20261007-1
   python3 scripts/alpaca.py cancel-all
+  python3 scripts/alpaca.py crypto-bars BTC/USD --timeframe 1Hour --limit 100
+  python3 scripts/alpaca.py option-chain QQQ --type call --exp-gte 2026-10-07 --exp-lte 2026-10-09
 """
 import argparse
 import datetime
@@ -143,7 +145,41 @@ def cmd_order(args):
         body["type"] = "stop"
         body["stop_price"] = f"{args.stop_only:.2f}"
         body.pop("limit_price", None)
+    elif args.stop_limit:
+        # Crypto and extended hours have no bracket support: stop_limit is the broker side stop.
+        if not args.limit:
+            sys.exit("--stop-limit needs --limit (the worst acceptable fill).")
+        body["type"] = "stop_limit"
+        body["stop_price"] = fmt_price(args.stop_limit)
+        body["limit_price"] = fmt_price(args.limit)
+    if args.limit and "limit_price" in body:
+        body["limit_price"] = fmt_price(args.limit)
+    if args.extended:
+        if body["type"] != "limit" or args.tif != "day":
+            sys.exit("--extended needs a plain limit order with --tif day.")
+        body["extended_hours"] = True
     out(*request("POST", f"{base_url(args.live)}/v2/orders", body=body))
+
+
+def fmt_price(x):
+    # Stocks above $1 take 2 decimals; crypto and cheap symbols need more.
+    return f"{x:.2f}" if x >= 1 else f"{x:.6f}".rstrip("0")
+
+
+def cmd_order_by_id(args):
+    out(*request("GET", f"{base_url(args.live)}/v2/orders:by_client_order_id", {"client_order_id": args.client_order_id}))
+
+
+def cmd_crypto_bars(args):
+    out(*request("GET", f"{DATA_URL}/v1beta3/crypto/us/bars", {
+        "symbols": args.symbol, "timeframe": args.timeframe, "start": args.start, "limit": args.limit}))
+
+
+def cmd_option_chain(args):
+    out(*request("GET", f"{DATA_URL}/v1beta1/options/snapshots/{args.underlying}", {
+        "feed": "indicative", "type": args.type, "expiration_date_gte": args.exp_gte,
+        "expiration_date_lte": args.exp_lte, "strike_price_gte": args.strike_gte,
+        "strike_price_lte": args.strike_lte, "limit": 100}))
 
 
 def cmd_cancel(args):
@@ -188,9 +224,22 @@ def main():
     od.add_argument("--stop", type=float, help="attached stop loss (bracket or OTO)")
     od.add_argument("--tp", type=float, help="attached take profit (makes it a bracket)")
     od.add_argument("--stop-only", type=float, help="standalone stop order at this price")
-    od.add_argument("--tif", default="day", choices=["day", "gtc"])
+    od.add_argument("--stop-limit", type=float, help="stop_limit order: trigger price (needs --limit)")
+    od.add_argument("--extended", action="store_true", help="allow pre, post and overnight sessions (limit, day only)")
+    od.add_argument("--tif", default="day", choices=["day", "gtc", "ioc"])
     od.add_argument("--id", help="client_order_id, <sleeve>-<ticker>-<YYYYMMDD>-<n>")
     od.set_defaults(fn=cmd_order)
+
+    ob = sub.add_parser("order-by-id"); ob.add_argument("client_order_id"); ob.set_defaults(fn=cmd_order_by_id)
+    cb = sub.add_parser("crypto-bars")
+    cb.add_argument("symbol", help="for example BTC/USD"); cb.add_argument("--timeframe", default="1Hour")
+    cb.add_argument("--start"); cb.add_argument("--limit", type=int, default=200)
+    cb.set_defaults(fn=cmd_crypto_bars)
+    oc = sub.add_parser("option-chain")
+    oc.add_argument("underlying"); oc.add_argument("--type", choices=["call", "put"])
+    oc.add_argument("--exp-gte"); oc.add_argument("--exp-lte")
+    oc.add_argument("--strike-gte", type=float); oc.add_argument("--strike-lte", type=float)
+    oc.set_defaults(fn=cmd_option_chain)
 
     c = sub.add_parser("cancel"); c.add_argument("order_id"); c.set_defaults(fn=cmd_cancel)
     sub.add_parser("cancel-all").set_defaults(fn=cmd_cancel_all)
