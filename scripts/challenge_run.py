@@ -402,10 +402,9 @@ def write_summary(st):
           "| Symbol | Side | Qty | Entry | Exit | P&L |", "| --- | --- | --- | --- | --- | --- |",
           *[row(t) for t in trades[:3]], "",
           "## How leverage affected the result", "",
-          f"Gross exposure averaged {avg_lev:.2f}x equity while positions were open and peaked at "
-          f"{st.get('max_gross_leverage', 0)}x. Leverage multiplies both directions: the same trades at 1x would have "
-          f"returned roughly {ret / avg_lev if avg_lev else 0:.1%} instead of {ret:.1%}, and the drawdown would have "
-          f"been roughly {mdd / avg_lev if avg_lev else 0:.1f}% instead of {mdd:.1f}%. Costs and slippage scale with "
+          f"Gross exposure (sum of Alpaca position values / equity, sampled every tick) averaged {avg_lev:.2f}x "
+          f"while positions were open and peaked at {st.get('max_gross_leverage', 0)}x. Gains and losses scale with "
+          "exposure, so the return and drawdown above were taken at that leverage. Costs and slippage scale with "
           "leverage too, so a strategy with no edge loses faster when levered.", "",
           "## A sane real money plan instead", "",
           "* Follow `trading/PAPER_PLAN.md`: momentum rotation plus RSI(2) pullbacks on liquid large caps and ETFs, "
