@@ -157,6 +157,12 @@ def live_trades(state):
         if len(page) < 100:
             break
         token = page[-1]["id"]
+    merged = {}  # Alpaca splits one order into many partial fills: one entry per order
+    for f in fills:
+        m = merged.setdefault(f.get("order_id") or f["id"], {**f, "qty": 0.0, "notional": 0.0})
+        m["qty"] += float(f["qty"])
+        m["notional"] += float(f["qty"]) * float(f["price"])
+    fills = [{**m, "price": m["notional"] / m["qty"]} for m in merged.values()]
     book, trades = {}, []
     for f in fills:
         sym, qty, px = f["symbol"], float(f["qty"]), float(f["price"])

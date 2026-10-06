@@ -30,3 +30,12 @@
 * Earnings: no stock is held overnight into its report. Dates in `trading/earnings.json` (from a web search, not all confirmed): none of the traded stocks reports before 2026-10-20; TSLA is expected 2026-10-21.
 * Weekend crypto cash reserve (`crypto_reserve`, now 0 because no crypto strategy is working yet).
 * `trading/PLAYBOOK.md` created; no strategy qualifies yet.
+
+## 2026-10-06 (daily review, 16:30 ET)
+
+* Alpaca equity $100,195.68 (previous close $100,000): day +$195.68 (+0.2%), total +0.2%. Open: SPY 77, AVGO 164 (trend, before the change), GOOGL 171, META 11, AMZN 2 (overnight).
+* Closed today (Alpaca fills, one entry per order): trend 5 (IWM, TSLA, QQQ, BTC, ETH), all losses, $-481; breakout 2 (NVDA, AMD), both losses, $-1,162; overnight 1 (MSFT), loss, $-98. Too few trades to judge any strategy.
+* Fixed: the scoreboard counted every partial fill as a trade (35 "trades" instead of 8); fills are now merged per order.
+* Fixed: churn at the overnight limit. MSFT was bought at 15:53 up to 1.9x, a small move put gross just above 1.9x and the 15:58 trim sold it at a loss. Late and overnight entries now stop at 1.8x, while the trim stays at 1.9x.
+* No weight change (breakout 0.4, overnight 0.4, orb 0.2). Backtests unchanged: no strategy is profitable in both periods with margin to spare; the search continues.
+* Earnings: no traded stock reports within 7 days (TSLA expected 2026-10-21).

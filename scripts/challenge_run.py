@@ -31,6 +31,7 @@ API, DATA, ET = ch.API, ch.DATA, ch.ET
 RISK = 0.025                # equity risked per trade at equal weights (scaled by the strategy's weight)
 GROSS_REGULAR = 3.5         # max gross exposure / equity in the regular session
 GROSS_OVERNIGHT = 1.9       # held through the close and outside regular hours
+GROSS_OVERNIGHT_ENTRY = 1.8 # new entries after 15:40 ET and outside regular hours stop here
 MAX_POSITIONS = 8           # all strategies combined
 MAX_PER_STRATEGY = 3
 OPEN_STATUSES = ("new", "accepted", "held", "partially_filled", "pending_new", "accepted_for_bidding")
@@ -281,7 +282,8 @@ class Tick:
         gross = sum(abs(float(p["market_value"])) for p in self.positions if p["symbol"] not in self.closed)
         hm = self.now.hour * 60 + self.now.minute
         day = self.session == "regular" and hm < 15 * 60 + 40  # late entries must fit the overnight limit
-        cap = (GROSS_REGULAR if day else GROSS_OVERNIGHT) * self.equity
+        # Late and overnight entries stop at 1.8x so small price moves don't trigger the 1.9x trim (churn).
+        cap = (GROSS_REGULAR if day else GROSS_OVERNIGHT_ENTRY) * self.equity
         pos_cap = (POS_CAP_REGULAR if day else POS_CAP_OVERNIGHT) * self.equity
         bp = float(acct["buying_power"]) if self.session == "regular" else float(acct.get("regt_buying_power") or 0)
         cash_crypto = float(acct.get("non_marginable_buying_power") or 0)
