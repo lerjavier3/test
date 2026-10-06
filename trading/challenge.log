@@ -39,3 +39,5 @@ max minutes reached, exiting for restart
 [10-06 11:53] 11:53 ET regular: equity 101,846, peak 102,073, max dd 0.57%, lev 3.26x, progress 0%, positions 7
 [10-06 11:58] 11:58 ET regular: equity 101,792, peak 102,073, max dd 0.57%, lev 3.26x, progress 0%, positions 7
 [10-06 12:04] 12:04 ET regular: equity 101,874, peak 102,073, max dd 0.57%, lev 3.21x, progress 0%, positions 6 | filled 8 @ 654.715: buy 8 AMD limit @655.68 stop 633.91 (breakout long, regular) [ch-breakout-AMD-202610061204-1]
+[10-06 12:09] 12:09 ET regular: equity 101,548, peak 102,073, max dd 0.57%, lev 3.27x, progress 0%, positions 7
+[10-06 12:14] 12:14 ET regular: equity 101,721, peak 102,073, max dd 0.57%, lev 3.27x, progress 0%, positions 7
