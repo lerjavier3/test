@@ -9,3 +9,8 @@
 [10-06 09:01] 09:01 ET pre: equity 99,908, peak 100,000, max dd 0.21%, lev 1.9x, progress -0%, positions 4 | UNFILLED, canceled: buy 1 NVDA limit @239.38 (long, pre) | UNFILLED, canceled: buy 1 GOOGL limit @347.15 (long, pre) | filled 0.0572 @ 86235.536818243: buy 0.0572 BTC/USD limit @86371.92 (long BTC/USD, stop 85714.73) [ch-BTCUSD-202610060901-3] | new 0 @ None: sell 0.057056998 BTC/USD stop_limit @84857.58 trigger 85714.73 (crypto stop) [ch-BTCUSD-202610060901-4] | filled 0.0917 @ 2715.9: buy 0.0917 ETH/USD limit @2720.22 (long ETH/USD, stop 2700.07) [ch-ETHUSD-202610060901-5] | new 0 @ None: sell 0.09147075 ETH/USD stop_limit @2673.07 trigger 2700.07 (crypto stop) [ch-ETHUSD-202610060901-6]
 [10-06 09:18] 09:18 ET pre: equity 99,881, peak 100,000, max dd 0.21%, lev 1.95x, progress -0%, positions 6
 [10-06 09:33] 09:33 ET regular: equity 99,994, peak 100,000, max dd 0.21%, lev 1.95x, progress -0%, positions 6
+[10-06 09:38] 09:38 ET regular: equity 99,910, peak 100,000, max dd 0.21%, lev 1.95x, progress -0%, positions 6
+[10-06 09:43] 09:43 ET regular: equity 100,255, peak 100,255, max dd 0.21%, lev 1.94x, progress 0%, positions 6
+[10-06 09:48] 09:48 ET regular: equity 100,524, peak 100,524, max dd 0.21%, lev 1.94x, progress 0%, positions 6
+[10-06 09:53] 09:53 ET regular: equity 100,540, peak 100,540, max dd 0.21%, lev 1.94x, progress 0%, positions 6
+[10-06 09:58] 09:58 ET regular: equity 100,921, peak 100,921, max dd 0.21%, lev 1.94x, progress 0%, positions 6
