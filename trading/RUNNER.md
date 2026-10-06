@@ -32,11 +32,11 @@ Each check in, a handful of tool calls:
 4. **Daily review**, only if it is a weekday, after 16:00 ET, and `trading/journal/reviews.md` has no entry for today (ET): do the review below.
 5. Hard stop: if the loop failed to start or had crashed (exit 3 in the log) on this check in and the previous one, don't schedule another. Log why in `trading/journal/errors.md` and push.
 6. If `challenge_active` is false: confirm `trading/journal/challenge-summary.md` exists, push, stop scheduling.
-7. Otherwise schedule the next check in (same message), 60 or 240 minutes out as above. Reply with one word, "ok" (or "failed: <reason>"). Never send the user reports during the challenge.
+7. Otherwise schedule the next check in (same message), 60 or 240 minutes out as above. Reply with one word, "ok" (or "failed: <reason>"), except the daily review check in, which replies with the daily P&L report.
 
 ## Daily review (once a day, first check in after the US close)
 
-Quiet: never message the user during the challenge. Everything goes into the journal files.
+The user wants one short daily P&L report, given as the reply to the daily review check in: Alpaca equity, day P&L in $ and %, total vs the $100,000 start, progress to $500,000, open positions, trades closed today (wins and losses), live results per strategy, and any strategy change. Numbers from Alpaca only. Other check ins reply "ok".
 
 1. `python3 scripts/strategy_backtest.py` (backtests every strategy in `scripts/strategies.py` on 400 days, in sample vs the last 120 days out of sample, plus live results from Alpaca fills) refreshes `trading/journal/strategy-scoreboard.md`. Read it with today's `trading/journal/YYYY-MM-DD.md` and `tail -40 trading/challenge.log`.
 2. Search for better strategies every day, even when one works: add simple variants or new ideas to `scripts/strategy_search.py` and run it. Rank on in sample only (at least 30 trades), then check out of sample. Want a high win rate AND average win bigger than average loss (profit factor above 1 in both periods). Research only what can improve results.
