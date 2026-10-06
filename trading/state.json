@@ -13,8 +13,8 @@
   "peak_equity": 102073.19,
   "trough_equity": 99787.74,
   "max_drawdown_pct": 0.57,
-  "last_equity": 101960.96,
-  "last_run_et": "2026-10-06T11:13-04:00",
+  "last_equity": 101874.24,
+  "last_run_et": "2026-10-06T12:04-04:00",
   "mental_stops": {
     "SPY": {
       "stop": 775.99,
@@ -35,11 +35,15 @@
     "NVDA": {
       "stop": 236.97,
       "side": "buy"
+    },
+    "AMD": {
+      "stop": 633.91,
+      "side": "buy"
     }
   },
   "routines": {},
   "rate_limit_failures": [],
-  "max_gross_leverage": 3.26,
+  "max_gross_leverage": 3.27,
   "leverage_samples": [
     0.0,
     0.0,
@@ -70,7 +74,17 @@
     3.26,
     3.26,
     3.26,
-    3.26
+    3.26,
+    3.26,
+    3.26,
+    3.26,
+    3.27,
+    3.26,
+    3.26,
+    3.26,
+    3.26,
+    3.26,
+    3.21
   ],
   "last_options_day": "2026-10-06",
   "weights": {
@@ -80,11 +94,6 @@
   },
   "owners": {
     "AVGO": {
-      "strategy": "trend",
-      "side": "long",
-      "entry_time": "2026-10-06T10:55-04:00"
-    },
-    "BTC/USD": {
       "strategy": "trend",
       "side": "long",
       "entry_time": "2026-10-06T10:55-04:00"
@@ -114,6 +123,12 @@
       "side": "long",
       "stop": 236.9695,
       "entry_time": "2026-10-06T10:55-04:00"
+    },
+    "AMD": {
+      "strategy": "breakout",
+      "side": "long",
+      "stop": 633.9061,
+      "entry_time": "2026-10-06T12:04-04:00"
     }
   },
   "cooldown": {},

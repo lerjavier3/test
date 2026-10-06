@@ -29,3 +29,13 @@ max minutes reached, exiting for restart
 [10-06 11:06] 11:06 ET regular: equity 102,073, peak 102,073, max dd 0.57%, lev 3.26x, progress 1%, positions 7
 [10-06 11:08] 11:08 ET regular: equity 102,043, peak 102,073, max dd 0.57%, lev 3.26x, progress 1%, positions 7 | pending_new 0 @ None: sell 164 AVGO stop trigger 361.49 (backup broker stop) [ch-stop-AVGO-202610061108-1] | pending_new 0 @ None: sell 77 SPY stop trigger 775.99 (backup broker stop) [ch-stop-SPY-202610061108-2] | pending_new 0 @ None: sell 26 TSLA stop trigger 376.63 (backup broker stop) [ch-stop-TSLA-202610061108-3]
 [10-06 11:13] 11:13 ET regular: equity 101,961, peak 102,073, max dd 0.57%, lev 3.26x, progress 0%, positions 7
+[10-06 11:18] 11:18 ET regular: equity 101,966, peak 102,073, max dd 0.57%, lev 3.26x, progress 0%, positions 7
+[10-06 11:23] 11:23 ET regular: equity 102,000, peak 102,073, max dd 0.57%, lev 3.26x, progress 0%, positions 7
+[10-06 11:28] 11:28 ET regular: equity 101,932, peak 102,073, max dd 0.57%, lev 3.26x, progress 0%, positions 7
+[10-06 11:33] 11:33 ET regular: equity 101,773, peak 102,073, max dd 0.57%, lev 3.27x, progress 0%, positions 7
+[10-06 11:38] 11:38 ET regular: equity 101,804, peak 102,073, max dd 0.57%, lev 3.26x, progress 0%, positions 7
+[10-06 11:43] 11:43 ET regular: equity 101,782, peak 102,073, max dd 0.57%, lev 3.26x, progress 0%, positions 7
+[10-06 11:48] 11:48 ET regular: equity 101,791, peak 102,073, max dd 0.57%, lev 3.26x, progress 0%, positions 7
+[10-06 11:53] 11:53 ET regular: equity 101,846, peak 102,073, max dd 0.57%, lev 3.26x, progress 0%, positions 7
+[10-06 11:58] 11:58 ET regular: equity 101,792, peak 102,073, max dd 0.57%, lev 3.26x, progress 0%, positions 7
+[10-06 12:04] 12:04 ET regular: equity 101,874, peak 102,073, max dd 0.57%, lev 3.21x, progress 0%, positions 6 | filled 8 @ 654.715: buy 8 AMD limit @655.68 stop 633.91 (breakout long, regular) [ch-breakout-AMD-202610061204-1]
