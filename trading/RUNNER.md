@@ -36,7 +36,7 @@ Each check in, a handful of tool calls:
 
 ## Daily review (once a day, first check in after the US close)
 
-The user wants one short daily P&L report, given as the reply to the daily review check in: Alpaca equity, day P&L in $ and %, total vs the $100,000 start, progress to $500,000, open positions, trades closed today (wins and losses), live results per strategy, and any strategy change. Numbers from Alpaca only. Other check ins reply "ok".
+The user wants a MINI daily P&L report (to save tokens), as the reply to the daily review check in, 2 lines max, Alpaca numbers only, e.g. `Equity $101,192 | day -$650 (-0.6%) | total +1.2% | 5x progress 0% | 7 positions | 3W 2L today` and one line for any strategy change. Other check ins reply "ok".
 
 1. `python3 scripts/strategy_backtest.py` (backtests every strategy in `scripts/strategies.py` on 400 days, in sample vs the last 120 days out of sample, plus live results from Alpaca fills) refreshes `trading/journal/strategy-scoreboard.md`. Read it with today's `trading/journal/YYYY-MM-DD.md` and `tail -40 trading/challenge.log`.
 2. Search for better strategies every day, even when one works: add simple variants or new ideas to `scripts/strategy_search.py` and run it. Rank on in sample only (at least 30 trades), then check out of sample. Want a high win rate AND average win bigger than average loss (profit factor above 1 in both periods). Research only what can improve results.
