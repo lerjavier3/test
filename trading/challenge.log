@@ -28,3 +28,4 @@ max minutes reached, exiting for restart
 [10-06 11:01] 11:01 ET regular: equity 102,028, peak 102,028, max dd 0.57%, lev 3.26x, progress 1%, positions 7
 [10-06 11:06] 11:06 ET regular: equity 102,073, peak 102,073, max dd 0.57%, lev 3.26x, progress 1%, positions 7
 [10-06 11:08] 11:08 ET regular: equity 102,043, peak 102,073, max dd 0.57%, lev 3.26x, progress 1%, positions 7 | pending_new 0 @ None: sell 164 AVGO stop trigger 361.49 (backup broker stop) [ch-stop-AVGO-202610061108-1] | pending_new 0 @ None: sell 77 SPY stop trigger 775.99 (backup broker stop) [ch-stop-SPY-202610061108-2] | pending_new 0 @ None: sell 26 TSLA stop trigger 376.63 (backup broker stop) [ch-stop-TSLA-202610061108-3]
+[10-06 11:13] 11:13 ET regular: equity 101,961, peak 102,073, max dd 0.57%, lev 3.26x, progress 0%, positions 7
