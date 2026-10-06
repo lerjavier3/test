@@ -23,3 +23,10 @@
 * Built: shared strategy definitions (`scripts/strategies.py`), a backtester on 400 days of Alpaca bars with the last 120 days out of sample (`scripts/strategy_backtest.py`), a variant search (`scripts/strategy_search.py`) and `trading/journal/strategy-scoreboard.md`.
 * Tested: the live hourly trend strategy loses after costs (profit factor 0.74 in sample, 0.82 out of sample, 27% win rate), RSI(2) pullbacks lose (0.60 / 0.58, average loss bigger than average win), 15 minute ORB about breakeven (0.90 / 0.96). Variant search: hourly breakouts on stocks only (50 bar high, 3 ATR stop, exit below EMA50) 1.15 / 0.97; overnight hold of stocks above their 20 day average 1.11 / 1.03; 30 minute ORB longs 1.00 / 0.88; daily IBS had too few trades in 400 days to judge.
 * Change: live weights breakout 0.4, overnight 0.4, orb (30 minute, long only) 0.2. Trend and rsi2 get weight 0: no new trades, their open positions are still managed by their exit rules. No strategy is clearly profitable out of sample yet, so the search continues every day.
+
+## 2026-10-06 (11:08 ET, user request: safeguards and playbook)
+
+* Every stock position now gets a real GTC stop order at the broker as a backup (placed last in each tick, so nothing closed in the same tick gets one); closing a position cancels its orders from a fresh Alpaca list.
+* Earnings: no stock is held overnight into its report. Dates in `trading/earnings.json` (from a web search, not all confirmed): none of the traded stocks reports before 2026-10-20; TSLA is expected 2026-10-21.
+* Weekend crypto cash reserve (`crypto_reserve`, now 0 because no crypto strategy is working yet).
+* `trading/PLAYBOOK.md` created; no strategy qualifies yet.

@@ -44,5 +44,8 @@ Quiet: never message the user during the challenge. Everything goes into the jou
 4. Allocation (`weights` in `trading/state.json`, 2 or 3 strategies live, weights sum to 1): judge a live strategy after 15 to 20 trades unless clearly broken, then move weight toward the best live and out of sample results. A strategy at weight 0 opens nothing new but still manages its open positions.
 5. Never removed: paper only guard, a stop on every trade, one position per symbol (no doubling down, no opposite positions), the re-entry cooldown, no single trade risking the account, combined leverage caps, the 2026-10-20 04:30 ET end. No new trade right after a loss in the same symbol.
 6. `bash scripts/challenge_test.sh` must pass. Edit `trading/state.json` only while the loop is stopped (it rewrites the file every tick): stop the background task, edit, test, restart it (Check in step 2).
-7. Append to `trading/journal/reviews.md`: `## YYYY-MM-DD`, Alpaca equity, what happened, what was tested, the change (or "no change") and why.
-8. Commit code and journal, then `bash scripts/challenge_push.sh`.
+7. Playbook: when a strategy passes all three checks in `trading/PLAYBOOK.md`, add it there with its exact rules and numbers; remove or mark it if it later fails.
+8. Earnings: recheck the next report dates for the stocks in `trading/earnings.json` (one short search) if any date is within the next 7 days or unknown. The bot never holds a stock overnight into a report.
+9. Crypto: if a crypto strategy is working live, set `crypto_reserve` in `trading/state.json` (share of equity, for example 0.2). On Fridays from 15:40 ET the bot sells its weakest stocks until that much real cash is free for weekend crypto trading. 0 means off.
+10. Append to `trading/journal/reviews.md`: `## YYYY-MM-DD`, Alpaca equity, what happened, what was tested, the change (or "no change") and why.
+11. Commit code and journal, then `bash scripts/challenge_push.sh`.
