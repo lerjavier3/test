@@ -645,7 +645,10 @@ def main():
             sys.exit(3)
         if not a.dry_run and time.time() - last_push > 3300:
             last_push = time.time() if push() else last_push
-        time.sleep(sleep_for(session))
+        nap = sleep_for(session)
+        if a.max_minutes:  # never sleep past the exit time (the background task is killed at 2 h)
+            nap = max(5, min(nap, a.max_minutes * 60 - (time.time() - started)))
+        time.sleep(nap)
 
 
 if __name__ == "__main__":
