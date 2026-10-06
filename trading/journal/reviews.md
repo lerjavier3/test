@@ -17,7 +17,7 @@
 * Change: goal raised to 5x minimum ($500,000, no upper limit). Deadline moved to 2026-10-20 18:00 SGT. Last stock session 2026-10-19 (stocks and options close at 15:50 ET); crypto runs until 04:30 ET on 2026-10-20 (16:30 SGT), then everything is closed and the final report written.
 * Updated: `trading/state.json` (target_equity, target_date, stocks_end_et, end_after_et), summary labels and history window in the scripts, tests, RUNNER.md, skill and README.
 
-## 2026-10-06 (11:20 ET, user request: multiple strategies)
+## 2026-10-06 (10:55 ET, user request: multiple strategies)
 
 * Equity $101,703 (Alpaca).
 * Built: shared strategy definitions (`scripts/strategies.py`), a backtester on 400 days of Alpaca bars with the last 120 days out of sample (`scripts/strategy_backtest.py`), a variant search (`scripts/strategy_search.py`) and `trading/journal/strategy-scoreboard.md`.
