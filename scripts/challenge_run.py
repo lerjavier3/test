@@ -208,22 +208,26 @@ class Tick:
         if self.session == "regular" and self.now.weekday() < 5 and not self.stocks_done:
             self.options_open(acct)
 
-        ranked = sorted(self.signals.values(), key=lambda s: -(abs(s.get("last", 0) - s.get("ema20", 0)) / s["atr14_1h"]) if s.get("atr14_1h") else 0)
+        # Stay invested: breakouts first, then any symbol in a clear trend (close and EMA20 on the same
+        # side of EMA50), strongest trend first, until MAX_POSITIONS are held.
+        tradable = ("long_breakout", "short_breakdown", "long", "short")
+        ranked = sorted((s for s in self.signals.values() if s.get("signal") in tradable and s.get("atr14_1h")),
+                        key=lambda s: (s["signal"] in ("long", "short"), -abs(s["last"] - s["ema50"]) / s["atr14_1h"]))
         for s in ranked:
             sym, sig = s["symbol"], s.get("signal")
-            if n_open >= MAX_POSITIONS or sig not in ("long_breakout", "short_breakdown"):
+            if n_open >= MAX_POSITIONS:
                 continue
             if sym in held or sym in working or sym.replace("/", "") in working:
                 continue
             crypto = "/" in sym
             if not crypto and (self.session == "closed" or self.stocks_done):
                 continue
-            if sig == "short_breakdown" and (crypto or not day):  # shorts can't be covered overnight
+            if sig.startswith("short") and (crypto or not day):  # shorts can't be covered overnight
                 continue
             px = self.ref_price(sym)
             if not px:
                 continue
-            long = sig == "long_breakout"
+            long = sig.startswith("long")
             stop = px - 1.5 * s["atr14_1h"] if long else px + 1.5 * s["atr14_1h"]
             per_unit = abs(px - stop)
             if crypto:
