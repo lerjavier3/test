@@ -12,9 +12,9 @@
   "options_level": 3,
   "peak_equity": 102073.19,
   "trough_equity": 99787.74,
-  "max_drawdown_pct": 0.86,
-  "last_equity": 101191.71,
-  "last_run_et": "2026-10-06T12:29-04:00",
+  "max_drawdown_pct": 1.02,
+  "last_equity": 101067.27,
+  "last_run_et": "2026-10-06T12:59-04:00",
   "mental_stops": {
     "SPY": {
       "stop": 775.99,
@@ -89,6 +89,12 @@
     3.27,
     3.28,
     3.28,
+    3.28,
+    3.28,
+    3.28,
+    3.28,
+    3.28,
+    3.28,
     3.28
   ],
   "last_options_day": "2026-10-06",
@@ -99,11 +105,6 @@
   },
   "owners": {
     "AVGO": {
-      "strategy": "trend",
-      "side": "long",
-      "entry_time": "2026-10-06T10:55-04:00"
-    },
-    "ETH/USD": {
       "strategy": "trend",
       "side": "long",
       "entry_time": "2026-10-06T10:55-04:00"
