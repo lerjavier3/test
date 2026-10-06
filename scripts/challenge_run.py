@@ -413,6 +413,9 @@ def write_summary(st):
           "* Expect about 10% to 15% a year with 15% to 25% drawdowns along the way (`research/RESEARCH.md`), "
           "not 3x in a week.",
           "* Paper trade it for 8 weeks first and only move to real money with written approval.", ""]
+    reviews = os.path.join(ch.JOURNAL, "reviews.md")
+    if os.path.exists(reviews):  # every daily review and strategy change, in order
+        md += ["## Daily reviews and strategy changes", "", open(reviews).read().split("\n", 1)[-1].strip(), ""]
     with open(os.path.join(ch.JOURNAL, "challenge-summary.md"), "w") as f:
         f.write("\n".join(md))
 
