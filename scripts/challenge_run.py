@@ -33,6 +33,8 @@ GROSS_REGULAR = 3.5         # max gross exposure / equity in the regular session
 GROSS_OVERNIGHT = 1.9       # held through the close and outside regular hours
 MAX_POSITIONS = 8           # all strategies combined
 MAX_PER_STRATEGY = 3
+OPEN_STATUSES = ("new", "accepted", "held", "partially_filled", "pending_new", "accepted_for_bidding")
+EARNINGS = os.path.join(ch.ROOT, "trading", "earnings.json")
 COOLDOWN_MIN = 60           # no re-entry in a symbol for an hour after closing it
 POS_CAP_REGULAR = 1.0       # max value of one stock position / equity, regular session
 POS_CAP_OVERNIGHT = 0.6     # same, after 15:40 ET and outside regular hours
@@ -65,7 +67,7 @@ class Tick:
         if s >= 400 or s == 0:
             self.notes.append(f"REJECTED {line}: {str(d)[:160]}")
             return None
-        for _ in range(10):  # confirm the fill, up to 20 s
+        for _ in range(0 if body["type"] in ("stop", "stop_limit") else 10):  # confirm the fill, up to 20 s
             if d.get("status") in ("filled", "canceled", "rejected", "expired"):
                 break
             time.sleep(2)
@@ -80,7 +82,8 @@ class Tick:
         return d
 
     def cancel_symbol_orders(self, sym):
-        for o in self.orders:
+        live = self.orders if self.dry else ch.get("/v2/orders", {"status": "open", "limit": 200})
+        for o in live:  # fresh from Alpaca, so orders placed earlier in this tick are canceled too
             if o["symbol"].replace("/", "") == sym.replace("/", ""):
                 if not self.dry:
                     alpaca.request("DELETE", f"{API}/v2/orders/{o['id']}")
@@ -129,7 +132,9 @@ class Tick:
         st = self.state
         acct = ch.get("/v2/account")
         self.positions = ch.get("/v2/positions")
-        self.orders = ch.get("/v2/orders", {"status": "open", "limit": 200})
+        self.orders = []
+        for o in ch.get("/v2/orders", {"status": "open", "limit": 200, "nested": "true"}):
+            self.orders += [o] + [leg for leg in o.get("legs") or [] if leg.get("status") in OPEN_STATUSES]
         clock = ch.get("/v2/clock")
         self.session = ch.session_now(clock)
         self.closed, self.stocks_done = set(), False
@@ -205,6 +210,21 @@ class Tick:
                 reason = strat.exit(ind, bars, i, {"side": own["side"], "entry_i": entry_i})
                 if reason:
                     self.close(p, f"{strat.name}: {reason}")
+        late = self.session != "regular" or hm >= 15 * 60 + 45
+        for p in self.positions:  # never hold a stock overnight through its earnings report
+            if p["symbol"] not in self.closed and p["asset_class"] == "us_equity" and late and self.earnings_soon(p["symbol"]):
+                self.tag = owners.get(p["symbol"], {}).get("strategy", "trend")
+                self.close(p, "earnings report next session")
+        reserve = self.state.get("crypto_reserve", 0)  # cash kept free for weekend crypto trading
+        if reserve and self.now.weekday() == 4 and self.session == "regular" and hm >= 15 * 60 + 40:
+            cash = float(acct["cash"])
+            for p in sorted((p for p in self.positions if p["symbol"] not in self.closed and p["asset_class"] == "us_equity"
+                             and float(p["qty"]) > 0), key=lambda p: float(p["unrealized_plpc"])):
+                if cash >= reserve * self.equity:
+                    break
+                self.tag = owners.get(p["symbol"], {}).get("strategy", "trend")
+                self.close(p, f"free {reserve:.0%} cash for weekend crypto")
+                cash += float(p["market_value"])
         # Leverage trim: before the close and whenever outside the regular session.
         if self.session != "regular" or hm >= 15 * 60 + 45:
             live = [p for p in self.positions if p["symbol"] not in self.closed and p["asset_class"] == "us_equity"]
@@ -215,6 +235,42 @@ class Tick:
                 self.tag = owners.get(p["symbol"], {}).get("strategy", "trend")
                 self.close(p, f"trim gross to {GROSS_OVERNIGHT}x")
                 gross -= abs(float(p["market_value"]))
+        self.backup_stops()  # last, so nothing closed in this tick gets a new stop
+        held = {ch_symbol(p) for p in self.positions}
+        for sym in [k for k in owners if k not in held]:  # closed by a broker stop or target
+            owners.pop(sym)
+
+    def earnings_soon(self, sym):
+        """True when the stock reports today or on the next trading day (dates in trading/earnings.json)."""
+        try:
+            d = json.load(open(EARNINGS)).get(sym)
+        except (OSError, ValueError):
+            return False
+        if not d or d.startswith("_"):
+            return False
+        gap = (datetime.date.fromisoformat(d) - self.now.date()).days
+        return 0 <= gap <= (3 if self.now.weekday() == 4 else 1)
+
+    def backup_stops(self):
+        """Every stock position gets a real GTC stop order at the broker, on top of the bot's own check."""
+        stops = self.state.get("mental_stops", {})
+        owners = self.state.get("owners", {})
+        has_stop = {o["symbol"] for o in self.orders if o.get("type") in ("stop", "stop_limit")}
+        for p in self.positions:
+            sym = p["symbol"]
+            if sym in self.closed or p["asset_class"] != "us_equity" or sym in has_stop:
+                continue
+            qty, avail, px = float(p["qty"]), abs(float(p.get("qty_available") or 0)), float(p["current_price"])
+            if not avail or avail != int(avail):
+                continue
+            long = qty > 0
+            stop = (stops.get(sym) or {}).get("stop") or (owners.get(sym) or {}).get("stop") or \
+                float(p["avg_entry_price"]) * (0.95 if long else 1.05)
+            if (long and stop >= px) or (not long and stop <= px):
+                continue  # already through the stop: the bot's own check closes it
+            self.tag = "stop"
+            self.submit({"symbol": sym, "side": "sell" if long else "buy", "qty": str(int(avail)), "type": "stop",
+                         "stop_price": alpaca.fmt_price(stop), "time_in_force": "gtc"}, "backup broker stop")
 
     def enter(self, acct):
         st = self.state
@@ -267,6 +323,8 @@ class Tick:
                 if not crypto and (self.session == "closed" or self.stocks_done):
                     continue
                 if name == "orb" and (not day or sym in orb_done):
+                    continue
+                if not crypto and (not day or name == "overnight") and self.earnings_soon(sym):
                     continue
                 bars = data["bars"]
                 sig = strat.entry(data["ind"][name], bars, len(bars) - 1)

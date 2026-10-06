@@ -18,7 +18,8 @@ These rules must **never** be used with live money. `risk-manager`, `swing-trade
 | Paper only | Refuses unless the endpoint is paper, `ALPACA_PAPER` is not `false` and `state.json` mode is `paper_challenge` (exit 2). |
 | Equity floor | Removed by the user on 2026-10-06 (`equity_floor` 0). Alpaca itself may restrict a low account. |
 | Options | Buy calls or puts only, never sell to open. |
-| Stops | Every stock entry has a bracket stop (regular hours) and a mental stop checked every tick; crypto gets a broker stop_limit; options exit at minus 50%. |
+| Stops | Every stock position has a real GTC stop order at the broker (bracket, OTO or a backup stop the bot places) plus the bot's own stop check every tick; crypto gets a broker stop_limit; options exit at minus 50%. |
+| Earnings | No stock is held overnight into its earnings report (`trading/earnings.json`). |
 | Hygiene | Unique `client_order_id` per order (`ch-<SYMBOL>-<YYYYMMDDHHMM>-<n>`), fill confirmed, unfilled limits canceled. |
 
 ## Strategy (what the script does)
