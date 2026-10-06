@@ -10,6 +10,8 @@ run() {
 }
 run regular 10:30
 run regular 15:50 --pos
+run regular 15:55
+run regular 09:31 --pos
 run overnight 23:00
 run overnight 02:00 --pos
 run pre 07:00 --pos

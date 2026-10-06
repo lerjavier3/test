@@ -23,12 +23,8 @@ These rules must **never** be used with live money. `risk-manager`, `swing-trade
 
 ## Strategy (what the script does)
 
-* **Signal:** 1 hour bars. Long breakout = close above EMA20 above EMA50 and above the prior 20 bar high; short breakdown is the mirror. Stop 1.5 ATR(14, 1h), take profit 4 ATR.
-* **Universe:** QQQ, SPY, IWM, NVDA, TSLA, AAPL, MSFT, AMZN, META, AMD, GOOGL, AVGO; BTC/USD, ETH/USD, SOL/USD.
-* **Sizing:** 4% of equity at risk per trade (2% outside regular hours). One stock position at most 1.0x equity (0.6x after 15:40 ET and outside regular hours). Gross exposure at most 3.5x intraday, trimmed to 1.9x from 15:45 ET and outside regular hours (Reg T overnight limit is 2x). At most 6 positions. Crypto is cash only and long only.
-* **Sessions:** regular: longs, shorts (before 15:40 only), crypto, options. Pre, post, overnight: stock longs with extended hours limits, crypto. Weekend: crypto.
-* **Options:** once a day between 09:35 and 11:00 ET, buy the QQQ call (first 5 minute bar up) or put (down), nearest expiry 1 to 4 days out, strike nearest the money, at most 8% of equity in premium. Exit at minus 50%, plus 100%, or 15:45 ET the day before expiry.
-* **Exits:** stop hit, signal flipped against the position, option rules, leverage trim (biggest loser first).
+* **Strategies:** several run side by side, defined in `scripts/strategies.py` (shared with the backtester), each with a capital weight in `trading/state.json` → `weights`. Order ids carry the strategy name (`ch-<strategy>-<SYMBOL>-<stamp>-<n>`); `owners` maps each open position to its strategy, which manages its exits. `trading/journal/strategy-scoreboard.md` has backtest (in and out of sample) and live results plus the exact rules.
+* **Sizing:** 2.5% of equity at risk per trade at equal weights, scaled by the strategy's weight (half outside regular hours). Each strategy may use its weight's share of the gross cap: 3.5x intraday, 1.9x from 15:40 ET and outside regular hours, all strategies combined. At most 3 positions per strategy, 8 in total, one per symbol. One hour re-entry cooldown after any close. Crypto is cash only and long only.
 * **Target:** $500,000 is a minimum, not a cap; keep pushing as high as possible. Risk doesn't change when it is reached.
 * **End:** the last stock session is 2026-10-19; at 15:50 ET it closes all stocks and options, then only crypto trades. At 04:30 ET on 2026-10-20 (before the user checks at 18:00 SGT) it cancels all orders, closes everything, writes `trading/journal/challenge-summary.md`, sets `challenge_active` false and exits.
 

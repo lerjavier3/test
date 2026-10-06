@@ -17,16 +17,29 @@ ch.session_now = lambda clock: sess
 ET = ch.ET
 h, m = map(int, hhmm.split(':'))
 D = [int(x) for x in (sys.argv[3] if len(sys.argv) > 3 and not sys.argv[3].startswith("--") else "2026-10-07").split("-")]
+# Real bars fetched before the clock is faked; forced signals: trend long NVDA, trend short TSLA,
+# overnight AAPL and MSFT, orb long QQQ.
+import strategies as S
+DATA = cr.market_data("regular")
+for tf in DATA.values():
+    for sym, d in tf.items():
+        for ind in d["ind"].values():
+            ind["sym"] = sym
+cr.market_data = lambda session: DATA
+FORCED = {("breakout", "NVDA"): "long", ("orb", "QQQ"): "long", ("overnight", "AAPL"): "long",
+          ("overnight", "MSFT"): "long", ("trend", "TSLA"): "short"}  # trend has weight 0: must not trade
+def forced(name):
+    def entry(ind, bars, i):
+        side = FORCED.get((name, ind.get("sym")))
+        return (side, bars[i]["c"] * (0.98 if side == "long" else 1.02), 2.0) if side else None
+    return entry
+for n in S.ALL:
+    S.ALL[n].entry = forced(n)
 now = datetime.datetime(*D, h, m, tzinfo=ET)
 class FakeDT(datetime.datetime):
     @classmethod
     def now(cls, tz=None): return now if tz else now.replace(tzinfo=None)
 cr.datetime.datetime = FakeDT
-live = {s['symbol']: s for s in cr.signals()}
-def sig(sym, kind):
-    s = dict(live[sym]); s['signal'] = kind; return s
-cr.signals = lambda: [sig('NVDA','long_breakout'), sig('TSLA','short_breakdown'), sig('BTC/USD','long_breakout'),
-                      sig('AMD','short'), sig('QQQ','long'), sig('ETH/USD','flat')]
 FAKE['/v2/stocks/QQQ/bars'] = lambda p: {"bars": [{"o": 750, "c": 752}]}
 pos = []
 if '--pos' in sys.argv:

@@ -65,6 +65,11 @@ def save_state(state):
 
 def get(path, params=None, base=API):
     s, d = alpaca.request("GET", f"{base}{path}", params)
+    for wait in (3, 6, 12, 24):  # rate limited (about 200 requests a minute): back off and retry
+        if s != 429:
+            break
+        time.sleep(wait)
+        s, d = alpaca.request("GET", f"{base}{path}", params)
     if s != 200:
         if s == 429:
             log_error("rate limited by Alpaca on " + path)

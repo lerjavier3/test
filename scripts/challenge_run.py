@@ -25,12 +25,15 @@ import traceback
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import alpaca  # noqa: E402
 import challenge as ch  # noqa: E402
+import strategies as S  # noqa: E402
 
 API, DATA, ET = ch.API, ch.DATA, ch.ET
-RISK = 0.04                 # equity risked per trade (entry to stop)
+RISK = 0.025                # equity risked per trade at equal weights (scaled by the strategy's weight)
 GROSS_REGULAR = 3.5         # max gross exposure / equity in the regular session
 GROSS_OVERNIGHT = 1.9       # held through the close and outside regular hours
-MAX_POSITIONS = 6
+MAX_POSITIONS = 8           # all strategies combined
+MAX_PER_STRATEGY = 3
+COOLDOWN_MIN = 60           # no re-entry in a symbol for an hour after closing it
 POS_CAP_REGULAR = 1.0       # max value of one stock position / equity, regular session
 POS_CAP_OVERNIGHT = 0.6     # same, after 15:40 ET and outside regular hours
 OPTION_BUDGET = 0.08        # premium per options trade, share of equity
@@ -39,7 +42,7 @@ MAX_ERRORS = 5              # consecutive failed ticks before the loop exits
 
 class Tick:
     def __init__(self, dry):
-        self.dry, self.notes, self.n = dry, [], 0
+        self.dry, self.notes, self.n, self.tag = dry, [], 0, "trend"
         self.state = ch.paper_guard()
         self.now = datetime.datetime.now(ET)
         self.stamp = self.now.strftime("%Y%m%d%H%M")
@@ -47,7 +50,7 @@ class Tick:
     # ---------- broker helpers ----------
     def oid(self, sym):
         self.n += 1
-        return f"ch-{sym.replace('/', '')}-{self.stamp}-{self.n}"
+        return f"ch-{self.tag}-{sym.replace('/', '')}-{self.stamp}-{self.n}"
 
     def submit(self, body, why):
         body["client_order_id"] = self.oid(body["symbol"])
@@ -105,6 +108,9 @@ class Tick:
             body.update(type="limit", limit_price=alpaca.fmt_price(px), time_in_force="day", extended_hours=True)
         if self.submit(body, "close: " + why):
             self.state.get("mental_stops", {}).pop(sym, None)
+            key = crypto_pair(sym) if crypto else sym
+            self.state.get("owners", {}).pop(key, None)
+            self.state.setdefault("cooldown", {})[key] = (self.now + datetime.timedelta(minutes=COOLDOWN_MIN)).isoformat()
             self.closed.add(sym)
 
     # ---------- market data ----------
@@ -144,7 +150,7 @@ class Tick:
         stocks_end = datetime.datetime.fromisoformat(st["stocks_end_et"]).replace(tzinfo=ET)
         self.stocks_done = self.now >= stocks_end  # after the last stock session only crypto trades
 
-        self.signals = {s["symbol"]: s for s in signals()}
+        self.data = market_data(self.session)
         if self.stocks_done:
             for p in self.positions:
                 if p["asset_class"] != "crypto":
@@ -160,6 +166,7 @@ class Tick:
     def manage(self, acct):
         hm = self.now.hour * 60 + self.now.minute
         stops = self.state.setdefault("mental_stops", {})
+        owners = self.state.setdefault("owners", {})
         for p in list(self.positions):
             sym, px, qty = p["symbol"], float(p["current_price"]), float(p["qty"])
             if sym in self.closed:
@@ -174,14 +181,30 @@ class Tick:
                 elif self.session == "regular" and (exp - self.now.date()).days <= 1 and hm >= 15 * 60 + 45:
                     self.close(p, "option expires next day")
                 continue
+            key = ch_symbol(p)
+            own = owners.setdefault(key, {"strategy": "trend", "side": "long" if qty > 0 else "short",
+                                          "entry_time": self.now.isoformat(timespec="minutes")})
+            self.tag = own["strategy"]
             ms = stops.get(sym)
             if ms and ((qty > 0 and px <= ms["stop"]) or (qty < 0 and px >= ms["stop"])):
                 self.close(p, f"stop {ms['stop']} hit at {px}")
                 continue
-            sig = self.signals.get(ch_symbol(p)) or {}
-            s = sig.get("signal", "")
-            if (qty > 0 and s.startswith("short")) or (qty < 0 and s.startswith("long")):
-                self.close(p, f"signal flipped to {s}")
+            strat = S.ALL.get(own["strategy"])
+            if strat and strat.name == "overnight":
+                if self.session == "regular" and own["entry_time"][:10] < self.now.date().isoformat():
+                    self.close(p, "overnight: sell at the open")
+                continue
+            if strat and strat.name == "orb" and (self.session != "regular" or hm >= 15 * 60 + 50):
+                self.close(p, "orb: 15:50 ET close")
+                continue
+            data = self.data.get(strat.timeframe, {}).get(key) if strat else None
+            if data and len(data["bars"]) > strat.warmup:
+                bars, ind = data["bars"], data["ind"][strat.name]
+                i = len(bars) - 1
+                entry_i = next((j for j, b in enumerate(bars) if b["t"] >= own["entry_time"]), i)
+                reason = strat.exit(ind, bars, i, {"side": own["side"], "entry_i": entry_i})
+                if reason:
+                    self.close(p, f"{strat.name}: {reason}")
         # Leverage trim: before the close and whenever outside the regular session.
         if self.session != "regular" or hm >= 15 * 60 + 45:
             live = [p for p in self.positions if p["symbol"] not in self.closed and p["asset_class"] == "us_equity"]
@@ -189,13 +212,16 @@ class Tick:
             for p in sorted(live, key=lambda p: float(p["unrealized_plpc"])):
                 if gross <= GROSS_OVERNIGHT * self.equity:
                     break
+                self.tag = owners.get(p["symbol"], {}).get("strategy", "trend")
                 self.close(p, f"trim gross to {GROSS_OVERNIGHT}x")
                 gross -= abs(float(p["market_value"]))
 
     def enter(self, acct):
+        st = self.state
+        owners, cool = st.setdefault("owners", {}), st.setdefault("cooldown", {})
+        weights = st.get("weights") or {n: 1 / len(S.ALL) for n in S.ALL}
         held = {ch_symbol(p) for p in self.positions if p["symbol"] not in self.closed}
         working = {o["symbol"] for o in self.orders}
-        n_open = len(held)
         gross = sum(abs(float(p["market_value"])) for p in self.positions if p["symbol"] not in self.closed)
         hm = self.now.hour * 60 + self.now.minute
         day = self.session == "regular" and hm < 15 * 60 + 40  # late entries must fit the overnight limit
@@ -203,67 +229,99 @@ class Tick:
         pos_cap = (POS_CAP_REGULAR if day else POS_CAP_OVERNIGHT) * self.equity
         bp = float(acct["buying_power"]) if self.session == "regular" else float(acct.get("regt_buying_power") or 0)
         cash_crypto = float(acct.get("non_marginable_buying_power") or 0)
-        risk = RISK * self.equity * (1 if self.session == "regular" else 0.5)
+        today = self.now.date().isoformat()
+        orb_done = st.setdefault("orb_done", {}).setdefault(today, [])
+        for d in [d for d in st["orb_done"] if d != today]:
+            st["orb_done"].pop(d)
 
-        if self.session == "regular" and self.now.weekday() < 5 and not self.stocks_done:
-            self.options_open(acct)
+        if self.session == "regular" and self.now.weekday() < 5 and not self.stocks_done and weights.get("opt", 0) > 0:
+            self.tag = "opt"
+            self.options_open(acct, weights["opt"])
 
-        # Stay invested: breakouts first, then any symbol in a clear trend (close and EMA20 on the same
-        # side of EMA50), strongest trend first, until MAX_POSITIONS are held.
-        tradable = ("long_breakout", "short_breakdown", "long", "short")
-        ranked = sorted((s for s in self.signals.values() if s.get("signal") in tradable and s.get("atr14_1h")),
-                        key=lambda s: (s["signal"] in ("long", "short"), -abs(s["last"] - s["ema50"]) / s["atr14_1h"]))
-        for s in ranked:
-            sym, sig = s["symbol"], s.get("signal")
-            if n_open >= MAX_POSITIONS:
+        for name, w in sorted(weights.items(), key=lambda kv: -kv[1]):
+            strat = S.ALL.get(name)
+            if not strat or w <= 0:
                 continue
-            if sym in held or sym in working or sym.replace("/", "") in working:
+            mine = [s for s, o in owners.items() if o["strategy"] == name and s in held]
+            s_gross = sum(abs(float(p["market_value"])) for p in self.positions
+                          if ch_symbol(p) in mine and p["symbol"] not in self.closed)
+            risk = RISK * self.equity * w * len(weights) * (1 if self.session == "regular" else 0.5)
+            if name == "overnight" and not (self.session == "regular" and 15 * 60 + 50 <= hm <= 15 * 60 + 58):
                 continue
-            crypto = "/" in sym
-            if not crypto and (self.session == "closed" or self.stocks_done):
-                continue
-            if sig.startswith("short") and (crypto or not day):  # shorts can't be covered overnight
-                continue
-            px = self.ref_price(sym)
-            if not px:
-                continue
-            long = sig.startswith("long")
-            stop = px - 1.5 * s["atr14_1h"] if long else px + 1.5 * s["atr14_1h"]
-            per_unit = abs(px - stop)
-            if crypto:
-                qty = min(risk / per_unit, 0.95 * cash_crypto / px)
-                qty = math.floor(qty * 1e4) / 1e4
-                if qty * px < 10:
+            pool = self.data.get(strat.timeframe, {})
+            order = list(pool)
+            if name == "overnight":  # strongest first: furthest above the 20 day average
+                order.sort(key=lambda k: -(pool[k]["bars"][-1]["c"] / pool[k]["ind"][name]["sma"][-1])
+                           if pool[k]["bars"] and name in pool[k]["ind"] else 0)
+            for sym in order:
+                data = pool[sym]
+                if len(held) >= MAX_POSITIONS or len(mine) >= MAX_PER_STRATEGY:
+                    break
+                if sym not in strat.universe or len(data["bars"]) <= strat.warmup:
                     continue
-                body = {"symbol": sym, "side": "buy", "qty": str(qty), "type": "limit",
-                        "limit_price": alpaca.fmt_price(px * 1.002), "time_in_force": "gtc"}
-                d = self.submit(body, f"{sig} {sym}, stop {stop:.2f}")
+                if sym in held or sym in working or sym.replace("/", "") in working:
+                    continue  # one position per symbol: no doubling down, no opposite positions
+                if cool.get(sym, "") > self.now.isoformat():
+                    continue  # no re-entry right after a close (no revenge trading)
+                crypto = "/" in sym
+                if not crypto and (self.session == "closed" or self.stocks_done):
+                    continue
+                if name == "orb" and (not day or sym in orb_done):
+                    continue
+                bars = data["bars"]
+                sig = strat.entry(data["ind"][name], bars, len(bars) - 1)
+                if not sig:
+                    continue
+                side, stop, r = sig
+                if side == "short" and (crypto or not day):  # crypto can't be shorted; shorts can't be covered overnight
+                    continue
+                px = self.ref_price(sym)
+                if not px or (side == "long" and stop >= px) or (side == "short" and stop <= px):
+                    continue
+                per_unit, long = abs(px - stop), side == "long"
+                tp = px + r * (px - stop) if r else None
+                self.tag = name
+                if crypto:
+                    qty = math.floor(min(risk / per_unit, 0.95 * cash_crypto / px) * 1e4) / 1e4
+                    if qty * px < 10:
+                        continue
+                    d = self.submit({"symbol": sym, "side": "buy", "qty": str(qty), "type": "limit",
+                                     "limit_price": alpaca.fmt_price(px * 1.002), "time_in_force": "gtc"},
+                                    f"{name} long, stop {stop:.2f}")
+                    if d and float(d.get("filled_qty") or 0) > 0:
+                        cash_crypto -= qty * px
+                        self.crypto_stop(sym, stop)
+                        self.opened(sym, name, side, stop, held, mine)
+                    continue
+                room = min(cap - gross, w * cap - s_gross, 0.95 * bp)
+                qty = int(min(risk / per_unit, room / px, pos_cap / px))
+                if qty < 1:
+                    continue
+                body = {"symbol": sym, "side": "buy" if long else "sell", "qty": str(qty), "type": "limit",
+                        "limit_price": alpaca.fmt_price(px * (1.002 if long else 0.998))}
+                if self.session == "regular":
+                    body.update(time_in_force="gtc", order_class="bracket" if tp else "oto",
+                                stop_loss={"stop_price": alpaca.fmt_price(stop)})
+                    if tp:
+                        body["take_profit"] = {"limit_price": alpaca.fmt_price(tp)}
+                else:
+                    body.update(time_in_force="day", extended_hours=True)
+                d = self.submit(body, f"{name} {side}, {self.session}")
                 if d and float(d.get("filled_qty") or 0) > 0:
-                    cash_crypto -= qty * px
-                    n_open += 1
-                    self.crypto_stop(sym, stop)
-                continue
-            room = min(cap - gross, 0.95 * bp)
-            qty = int(min(risk / per_unit, room / px, pos_cap / px))
-            if qty < 1:
-                continue
-            lim = px * (1.002 if long else 0.998)
-            body = {"symbol": sym, "side": "buy" if long else "sell", "qty": str(qty), "type": "limit",
-                    "limit_price": alpaca.fmt_price(lim)}
-            if self.session == "regular":
-                tp = px + 4 * s["atr14_1h"] if long else px - 4 * s["atr14_1h"]
-                body.update(time_in_force="gtc", order_class="bracket",
-                            stop_loss={"stop_price": alpaca.fmt_price(stop)},
-                            take_profit={"limit_price": alpaca.fmt_price(tp)})
-            else:
-                body.update(time_in_force="day", extended_hours=True)
-            d = self.submit(body, f"{sig}, {self.session}")
-            if d and float(d.get("filled_qty") or 0) > 0:
-                # Broker stops don't trigger outside regular hours, so every run also checks this one.
-                self.state.setdefault("mental_stops", {})[sym] = {"stop": round(stop, 2), "side": body["side"]}
-                gross += qty * px
-                bp -= qty * px / (4 if self.session == "regular" else 2)
-                n_open += 1
+                    # Broker stops don't trigger outside regular hours, so every run also checks this one.
+                    st.setdefault("mental_stops", {})[sym] = {"stop": round(stop, 2), "side": body["side"]}
+                    gross += qty * px
+                    s_gross += qty * px
+                    bp -= qty * px / (4 if self.session == "regular" else 2)
+                    if name == "orb":
+                        orb_done.append(sym)
+                    self.opened(sym, name, side, stop, held, mine)
+
+    def opened(self, sym, name, side, stop, held, mine):
+        self.state.setdefault("owners", {})[sym] = {"strategy": name, "side": side, "stop": round(stop, 4),
+                                                    "entry_time": self.now.isoformat(timespec="minutes")}
+        held.add(sym)
+        mine.append(sym)
 
     def crypto_stop(self, sym, stop):
         if self.dry:
@@ -276,7 +334,7 @@ class Tick:
                      "stop_price": alpaca.fmt_price(stop), "limit_price": alpaca.fmt_price(stop * 0.99),
                      "time_in_force": "gtc"}, "crypto stop")
 
-    def options_open(self, acct):
+    def options_open(self, acct, weight):
         """Once a day after 09:35 ET: buy a QQQ call or put in the direction of the first 5 minute bar."""
         today = self.now.date().isoformat()
         hm = self.now.hour * 60 + self.now.minute
@@ -309,7 +367,8 @@ class Tick:
         if not best:
             return self.notes.append("options: no quotes")
         occ, ask = best[1], best[2]
-        budget = min(OPTION_BUDGET * self.equity, float(acct.get("options_buying_power") or 0))
+        budget = min(OPTION_BUDGET * weight * len(self.state.get("weights") or [1]) * self.equity,
+                     float(acct.get("options_buying_power") or 0))
         qty = int(budget // (ask * 100))
         if qty < 1:
             return
@@ -359,13 +418,48 @@ def ch_symbol(p):
     return crypto_pair(p["symbol"]) if p["asset_class"] == "crypto" else p["symbol"]
 
 
-def signals():
-    start = (datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=21)).strftime("%Y-%m-%dT%H:%M:%SZ")
-    stocks = ch.all_bars("/v2/stocks/bars", {"symbols": ",".join(ch.STOCKS), "timeframe": "1Hour",
-                                             "start": start, "feed": "iex", "adjustment": "all"})
-    crypto = ch.all_bars("/v1beta3/crypto/us/bars", {"symbols": ",".join(ch.CRYPTO), "timeframe": "1Hour", "start": start})
-    return [ch.signal_for(s, stocks.get(s, [])) for s in ch.STOCKS] + \
-           [ch.signal_for(s, crypto.get(s, [])) for s in ch.CRYPTO]
+BAR_CACHE = {}  # (timeframe, symbol) -> bars, kept for the life of the loop process
+TF_MIN = {"1Hour": 60, "5Min": 5, "1Day": 0}  # 0: keep today's bar, it is priced at the latest trade
+
+
+def fetch_bars(timeframe, syms, start):
+    crypto = [s for s in syms if "/" in s]
+    stocks = [s for s in syms if "/" not in s]
+    out = {}
+    if stocks:
+        out.update(ch.all_bars("/v2/stocks/bars", {"symbols": ",".join(stocks), "timeframe": timeframe,
+                                                   "start": start, "feed": "iex", "adjustment": "all"}))
+    if crypto:
+        out.update(ch.all_bars("/v1beta3/crypto/us/bars", {"symbols": ",".join(crypto), "timeframe": timeframe,
+                                                           "start": start}))
+    return out
+
+
+def market_data(session):
+    """{timeframe: {symbol: {"bars": closed bars, "ind": {strategy: indicators}}}} for the active timeframes."""
+    now = datetime.datetime.now(datetime.timezone.utc)
+    need = {"1Hour": S.STOCKS + S.CRYPTO}
+    if session == "regular":
+        need["5Min"] = S.ORB_UNIVERSE
+        need["1Day"] = S.STOCKS
+    out = {}
+    for tf, syms in need.items():
+        days = {"1Hour": 45, "5Min": 1, "1Day": 60}[tf]
+        floor = (now - datetime.timedelta(days=days)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        last = min((BAR_CACHE.get((tf, s)) or [{"t": floor}])[-1]["t"] for s in syms)
+        new = fetch_bars(tf, syms, max(last, floor))
+        out[tf] = {}
+        for sym in syms:
+            old = [b for b in BAR_CACHE.get((tf, sym), []) if b["t"] >= floor]
+            fresh = new.get(sym, [])
+            bars = [b for b in old if not fresh or b["t"] < fresh[0]["t"]] + fresh
+            BAR_CACHE[(tf, sym)] = bars
+            # Signals use closed bars only, like the backtest.
+            closed = [b for b in bars if datetime.datetime.fromisoformat(b["t"].replace("Z", "+00:00"))
+                      + datetime.timedelta(minutes=TF_MIN[tf]) <= now]
+            ind = {n: st.prepare(closed) for n, st in S.ALL.items() if st.timeframe == tf and closed}
+            out[tf][sym] = {"bars": closed, "ind": ind}
+    return out
 
 
 def write_summary(st):
@@ -416,6 +510,11 @@ def write_summary(st):
           "* Expect about 10% to 15% a year with 15% to 25% drawdowns along the way (`research/RESEARCH.md`), "
           "not 5x in two weeks.",
           "* Paper trade it for 8 weeks first and only move to real money with written approval.", ""]
+    board = os.path.join(ch.JOURNAL, "strategy-scoreboard.md")
+    subprocess.run([sys.executable, os.path.join(ch.ROOT, "scripts", "strategy_backtest.py")],
+                   capture_output=True, timeout=1500)  # refresh backtest and live rows from Alpaca
+    if os.path.exists(board):  # every strategy's numbers and its exact entry and exit rules
+        md += ["## Strategies: scoreboard and exact rules", "", open(board).read().split("\n", 1)[-1].strip(), ""]
     reviews = os.path.join(ch.JOURNAL, "reviews.md")
     if os.path.exists(reviews):  # every daily review and strategy change, in order
         md += ["## Daily reviews and strategy changes", "", open(reviews).read().split("\n", 1)[-1].strip(), ""]
