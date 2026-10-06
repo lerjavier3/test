@@ -4,6 +4,8 @@ The trading is done by one deterministic script, `scripts/challenge_run.py`, run
 
 ## Loop
 
+Start it with the Bash tool's `run_in_background: true`, never `nohup` (see Check in step 2).
+
 ```bash
 nohup python3 scripts/challenge_run.py --loop >> trading/challenge.log 2>&1 &
 ```
@@ -25,7 +27,7 @@ Scheduled with `send_later` into this session: every 60 minutes from 08:00 to 17
 Each check in, a handful of tool calls:
 
 1. `cd /home/user/test; pgrep -f "^python3 scripts/challenge_run.py --loop"; tail -3 trading/challenge.log`
-2. If not running and `challenge_active` is true in `trading/state.json`: `git pull -q origin claude/mcp-trading-server-f75a0v`, then `(setsid nohup python3 scripts/challenge_run.py --loop >> trading/challenge.log 2>&1 < /dev/null &)` and confirm with `pgrep`.
+2. If not running and `challenge_active` is true in `trading/state.json`: `git pull -q origin claude/mcp-trading-server-f75a0v`, then start it with the **Bash tool's `run_in_background: true`** (timeout 7200000): `python3 scripts/challenge_run.py --loop --max-minutes 115 >> trading/challenge.log 2>&1`. A detached `nohup`/`setsid` process dies when the container is suspended after the turn; a tracked background task keeps the container alive, and its exit (every 115 minutes) wakes this session to restart it.
 3. `bash scripts/challenge_push.sh`
 4. **Daily review**, only if it is a weekday, after 16:00 ET, and `trading/journal/reviews.md` has no entry for today (ET): do the review below.
 5. Hard stop: if the loop failed to start or had crashed (exit 3 in the log) on this check in and the previous one, don't schedule another. Log why in `trading/journal/errors.md` and push.

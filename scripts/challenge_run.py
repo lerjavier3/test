@@ -445,13 +445,18 @@ def main():
     ap.add_argument("--once", action="store_true")
     ap.add_argument("--loop", action="store_true")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--max-minutes", type=float, help="exit 0 after this long (the background task limit is 2 h)")
     a = ap.parse_args()
     if not a.loop:
         code, t, lines = tick(a.dry_run)
         print("\n".join(lines[:10]))
         sys.exit(code)
-    errors, last_push = 0, 0.0
+    errors, last_push, started = 0, 0.0, time.time()
     while True:
+        if a.max_minutes and time.time() - started > a.max_minutes * 60:
+            push()
+            print("max minutes reached, exiting for restart", flush=True)
+            sys.exit(0)
         session = "closed"
         try:
             code, t, lines = tick(a.dry_run)
