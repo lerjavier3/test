@@ -89,3 +89,4 @@ max minutes reached, exiting for restart
 [10-06 15:58] 15:58 ET regular: equity 99,983, peak 102,073, max dd 2.05%, lev 1.9x, progress -0%, positions 4 | filled 113 @ 529.38: sell 113 MSFT market (close: trim gross to 1.9x) [ch-overnight-MSFT-202610061558-1] | filled 171 @ 347.677369: buy 171 GOOGL limit @348.39 stop 337.25 (overnight long, regular) [ch-overnight-GOOGL-202610061558-2]
 [10-06 16:03] 16:03 ET post: equity 99,941, peak 102,073, max dd 2.09%, lev 1.9x, progress -0%, positions 5
 [10-06 16:18] 16:18 ET post: equity 100,129, peak 102,073, max dd 2.09%, lev 1.9x, progress 0%, positions 5
+[10-06 16:26] 16:26 ET post: equity 100,256, peak 102,073, max dd 2.09%, lev 1.9x, progress 0%, positions 5
