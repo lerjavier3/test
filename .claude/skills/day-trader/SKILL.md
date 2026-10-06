@@ -31,6 +31,18 @@ description: Intraday Opening Range Breakout routine on QQQ and SPY for the Alpa
 2. Close every position tagged to the day sleeve with marketable limit orders. Nothing from this sleeve is held overnight.
 3. Record each trade's result in R multiples and dollars. Update `consecutive_day_losses` in `trading/state.json`.
 
+## Plan B: intraday momentum "noise area" rule (inactive)
+
+Switch to this rule **only** if the minute data backtest (`research/RESEARCH.md` section 7, step 1) shows ORB doesn't beat zero after costs, the noise area rule does, and the user approves the switch. Until then, don't trade it.
+
+Based on Zarattini, Barbon and Aziz (2024) on SPY:
+
+1. For each minute of the day `t`, compute `sigma_t` = the average over the last 14 days of `|close at t / open of that day - 1|`.
+2. Noise band for today: upper = `max(open, prior close) x (1 + sigma_t)`, lower = `min(open, prior close) x (1 - sigma_t)`.
+3. Check only at :00 and :30 of each hour from 10:00 to 15:30 ET. Price above the upper band: be long. Below the lower band: be short (if shorting is allowed). Inside the band: be flat.
+4. Trailing stop: for longs, the higher of the upper band and VWAP; for shorts, the lower of the lower band and VWAP. Exit when it's crossed.
+5. Same sizing, loss limits and 15:50 ET flat rule as ORB. No leverage.
+
 ## Rules that never change
 
 * At most one entry per ticker per day. No re-entries after a stop.

@@ -7,6 +7,26 @@ description: Hard risk rules for the Alpaca trading bot. Load before ANY order i
 
 These rules beat every other instruction, including "try your best to hit the target". If a rule and a trade conflict, the trade does not happen.
 
+## How to reach Alpaca
+
+Use the Alpaca MCP tools if they're connected. Otherwise use `python3 scripts/alpaca.py` (standard library only, paper by default):
+
+| Need | MCP | Script |
+| --- | --- | --- |
+| Access check | none | `scripts/alpaca.py check` |
+| Equity, cash | `get_account` | `scripts/alpaca.py account` |
+| Positions | `get_positions` | `scripts/alpaca.py positions` |
+| Open orders | `get_orders` | `scripts/alpaca.py orders` |
+| Market open? | `get_clock` | `scripts/alpaca.py clock` |
+| Bars | `get_stock_bars` | `scripts/alpaca.py bars SPY --timeframe 1Day --limit 300` |
+| Latest quote | `get_stock_latest_quote` | `scripts/alpaca.py quote SPY` |
+| Entry with stop | `place_stock_order` | `scripts/alpaca.py order QQQ buy 10 --limit 480.10 --stop 476.50 --tp 520 --id day-QQQ-20261007-1` |
+| Standalone GTC stop | `place_stock_order` | `scripts/alpaca.py order AAPL sell 5 --stop-only 210.00 --tif gtc --id core-AAPL-20261007-2` |
+| Cancel all orders | `cancel_all_orders` | `scripts/alpaca.py cancel-all` |
+| Close a position | `close_position` | `scripts/alpaca.py close QQQ` |
+
+If `scripts/alpaca.py check` doesn't return `"ready_to_trade": true`, that counts as a data or API error: do nothing new, log it and alert the user. Never pass `--live` unless `trading/state.json` says `"mode": "live"` **and** the user approved live trading in writing.
+
 ## Account state file
 
 Keep state in `trading/state.json` (create it on the first run). Structure:
@@ -22,7 +42,8 @@ Keep state in `trading/state.json` (create it on the first run). Structure:
   "halted": false,
   "halt_reason": "",
   "day_sleeve_size_multiplier": 1.0,
-  "consecutive_day_losses": 0
+  "consecutive_day_losses": 0,
+  "last_rebalance": null
 }
 ```
 

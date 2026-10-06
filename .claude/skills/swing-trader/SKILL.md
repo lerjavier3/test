@@ -33,6 +33,8 @@ XLK XLF XLV XLE XLY XLP XLI XLU XLB XLRE XLC GLD
 
 **Rebalance:** only on the **last trading day of each month**. On other days, only check stops.
 
+**First run exception:** if Sleeve A holds nothing and `trading/state.json` has no `last_rebalance` date, do one rebalance on the first run instead of waiting for month end, then set `last_rebalance` to today. This gets the core sleeve invested and the plumbing tested during the first paper week. After that, month end only.
+
 On rebalance day:
 1. If not `RISK_ON`: sell everything in Sleeve A and stay in cash until the next month end.
 2. Otherwise, rank the tickers that are above their own SMA200 by `MOM126`, highest first. Skip any ticker with earnings in the next 2 trading days if that data is available.
