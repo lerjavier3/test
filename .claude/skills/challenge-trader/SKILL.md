@@ -9,7 +9,7 @@ The user asked for an aggressive paper experiment: whole $100,000, leverage, aro
 
 These rules must **never** be used with live money. `risk-manager`, `swing-trader` and `day-trader` stay the rules for real money.
 
-**All trading logic is in `scripts/challenge_run.py`.** Scheduled check ins only follow `trading/RUNNER.md`: they don't trade by hand, re-derive the strategy or edit the rules. If the script fails, log and stop; don't improvise. The one exception is the **daily review** in `trading/RUNNER.md`: once a day after the US close it may change the strategy in the script (never the hard guards), test it with `scripts/challenge_test.sh`, restart the loop and log the change in `trading/journal/reviews.md`. The strategy below is the starting version; the reviews log what changed since.
+**All trading logic is in `scripts/challenge_run.py`.** Scheduled check ins only follow `trading/RUNNER.md`: they don't trade by hand, re-derive the strategy or edit the rules. If the script fails, log and stop; don't improvise. The exception is strategy changes, which the user allows at any time, and at least once a day in the **daily review** in `trading/RUNNER.md` after the US close. A change may replace the strategy in the script (never the hard guards), test it with `scripts/challenge_test.sh`, restart the loop and log the change in `trading/journal/reviews.md`. The strategy below is the starting version; the reviews log what changed since.
 
 ## Hard guards (in code)
 
