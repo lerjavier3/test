@@ -55,3 +55,9 @@
 
 * Daily ideas on the 38 symbol universe (1100 days, last 120 out of sample, 3 ATR stop): daily RSI(2) < 10 above SMA200, exit close above SMA5: 70% wins, profit factor 1.60 in sample; 78% wins, 2.90 out of sample (105 trades; average loss bigger than average win, profitable through the win rate). RSI(2) < 5: 1.54 / 7.06 (52 trades). IBS < 0.1 with RSI(2) < 20: 1.71 / 2.11. Three lower closes: 1.26 / 2.87. Down 3% day: 1.28 / 1.64. IBS < 0.2: 1.30 / 1.32.
 * Change: daily RSI(2) < 10 (rsi2d) goes live. Weights rsi2d 0.4, ibs 0.35, reversal 0.25. One position per symbol, so overlapping signals never double up.
+
+## 2026-10-07 (daily review, 16:30 ET)
+
+* Alpaca equity $99,861.92 (previous close $99,975.90): day -$113.98 (-0.1%), total -0.1%. Open: AVGO 164 (trend, from 2026-10-06), QCOM 133 (rsi2d), META 37 (ibs), COIN 252 (reversal), all entered 15:52 ET.
+* Fixed: the reversal strategy bought only 1 of its 2 picks because the first used its whole capital share; each pick now gets half of the share.
+* Tested on the 38 symbols (1100 days, last 120 out of sample): RSI(2) < 10 exiting at RSI(2) > 70: 1.56 / 3.29; Williams %R(2) oversold: 1.47 / 1.78; close below the 5 day low: 1.43 / 2.05. All profitable out of sample, none beats the live rsi2d in sample (1.60). No weight change.

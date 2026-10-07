@@ -13,11 +13,23 @@
   "peak_equity": 102073.19,
   "trough_equity": 98667.39,
   "max_drawdown_pct": 3.34,
-  "last_equity": 99452.13,
-  "last_run_et": "2026-10-07T15:42-04:00",
+  "last_equity": 99947.53,
+  "last_run_et": "2026-10-07T16:18-04:00",
   "mental_stops": {
     "AVGO": {
       "stop": 361.49,
+      "side": "buy"
+    },
+    "QCOM": {
+      "stop": 154.72,
+      "side": "buy"
+    },
+    "META": {
+      "stop": 650.82,
+      "side": "buy"
+    },
+    "COIN": {
+      "stop": 172.25,
       "side": "buy"
     }
   },
@@ -260,7 +272,12 @@
     0.62,
     0.62,
     0.62,
-    0.62
+    0.62,
+    0.62,
+    0.62,
+    1.57,
+    1.57,
+    1.57
   ],
   "last_options_day": "2026-10-06",
   "weights": {
@@ -273,6 +290,24 @@
       "strategy": "trend",
       "side": "long",
       "entry_time": "2026-10-06T10:55-04:00"
+    },
+    "QCOM": {
+      "strategy": "rsi2d",
+      "side": "long",
+      "stop": 154.7217,
+      "entry_time": "2026-10-07T15:52-04:00"
+    },
+    "META": {
+      "strategy": "ibs",
+      "side": "long",
+      "stop": 650.8176,
+      "entry_time": "2026-10-07T15:52-04:00"
+    },
+    "COIN": {
+      "strategy": "reversal",
+      "side": "long",
+      "stop": 172.2477,
+      "entry_time": "2026-10-07T15:52-04:00"
     }
   },
   "cooldown": {

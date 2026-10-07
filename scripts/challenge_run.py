@@ -362,6 +362,8 @@ class Tick:
                         self.opened(sym, name, side, stop, held, mine)
                     continue
                 room = min(cap - gross, w * cap - s_gross, 0.95 * bp)
+                if name == "reversal":  # split the strategy's share across its k picks
+                    room = min(room, w * cap / strat.k)
                 qty = int(min(risk / per_unit, room / px, pos_cap / px))
                 if qty < 1:
                     continue

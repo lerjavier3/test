@@ -247,3 +247,8 @@ max minutes reached, exiting for restart
 [10-07 15:32] 15:32 ET regular: equity 99,368, peak 102,073, max dd 3.34%, lev 0.62x, progress -0%, positions 1
 [10-07 15:37] 15:37 ET regular: equity 99,437, peak 102,073, max dd 3.34%, lev 0.62x, progress -0%, positions 1
 [10-07 15:42] 15:42 ET regular: equity 99,452, peak 102,073, max dd 3.34%, lev 0.62x, progress -0%, positions 1
+[10-07 15:47] 15:47 ET regular: equity 99,417, peak 102,073, max dd 3.34%, lev 0.62x, progress -0%, positions 1
+[10-07 15:52] 15:52 ET regular: equity 99,505, peak 102,073, max dd 3.34%, lev 0.62x, progress -0%, positions 1 | filled 133 @ 177.07: buy 133 QCOM limit @177.38 stop 154.72 (rsi2d long, regular) [ch-rsi2d-QCOM-202610071552-1] | filled 37 @ 721.36: buy 37 META limit @722.61 stop 650.82 (ibs long, regular) [ch-ibs-META-202610071552-2] | filled 252 @ 177.63: buy 252 COIN limit @177.98 stop 172.25 (reversal long, regular) [ch-reversal-COIN-202610071552-3]
+[10-07 15:58] 15:58 ET regular: equity 99,827, peak 102,073, max dd 3.34%, lev 1.57x, progress -0%, positions 4
+[10-07 16:03] 16:03 ET post: equity 99,999, peak 102,073, max dd 3.34%, lev 1.57x, progress -0%, positions 4
+[10-07 16:18] 16:18 ET post: equity 99,948, peak 102,073, max dd 3.34%, lev 1.57x, progress -0%, positions 4
