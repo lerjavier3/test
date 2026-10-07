@@ -165,3 +165,4 @@ max minutes reached, exiting for restart
 [10-07 07:49] 07:49 ET pre: equity 98,886, peak 102,073, max dd 3.18%, lev 1.31x, progress -0%, positions 3 | filled 77 @ 775.912727: sell 77 SPY limit @773.54 (close: stop 775.99 hit at 775.87) [ch-trend-SPY-202610070749-1]
 [10-07 08:04] 08:04 ET pre: equity 99,075, peak 102,073, max dd 3.18%, lev 0.7x, progress -0%, positions 3
 [10-07 08:19] 08:19 ET pre: equity 98,932, peak 102,073, max dd 3.18%, lev 0.7x, progress -0%, positions 3
+max minutes reached, exiting for restart
