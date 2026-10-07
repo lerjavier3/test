@@ -11,21 +11,13 @@
   "challenge_active": true,
   "options_level": 3,
   "peak_equity": 102073.19,
-  "trough_equity": 98827.23,
-  "max_drawdown_pct": 3.18,
-  "last_equity": 99025.17,
-  "last_run_et": "2026-10-07T09:24-04:00",
+  "trough_equity": 98667.39,
+  "max_drawdown_pct": 3.34,
+  "last_equity": 98892.59,
+  "last_run_et": "2026-10-07T10:09-04:00",
   "mental_stops": {
     "AVGO": {
       "stop": 361.49,
-      "side": "buy"
-    },
-    "META": {
-      "stop": 719.1,
-      "side": "buy"
-    },
-    "AMZN": {
-      "stop": 248.57,
       "side": "buy"
     }
   },
@@ -195,7 +187,14 @@
     0.7,
     0.7,
     0.7,
-    0.7
+    0.7,
+    0.7,
+    0.62,
+    0.62,
+    0.62,
+    0.62,
+    0.62,
+    0.62
   ],
   "last_options_day": "2026-10-06",
   "weights": {
@@ -208,18 +207,6 @@
       "strategy": "trend",
       "side": "long",
       "entry_time": "2026-10-06T10:55-04:00"
-    },
-    "META": {
-      "strategy": "overnight",
-      "side": "long",
-      "stop": 719.0998,
-      "entry_time": "2026-10-06T15:53-04:00"
-    },
-    "AMZN": {
-      "strategy": "overnight",
-      "side": "long",
-      "stop": 248.5722,
-      "entry_time": "2026-10-06T15:53-04:00"
     }
   },
   "cooldown": {
@@ -229,7 +216,9 @@
     "QQQ": "2026-10-06T16:47:50.352319-04:00",
     "MSFT": "2026-10-06T16:58:25.911784-04:00",
     "GOOGL": "2026-10-07T06:13:54.647712-04:00",
-    "SPY": "2026-10-07T08:49:11.899525-04:00"
+    "SPY": "2026-10-07T08:49:11.899525-04:00",
+    "AMZN": "2026-10-07T10:39:21.491300-04:00",
+    "META": "2026-10-07T10:39:21.491300-04:00"
   },
   "orb_done": {
     "2026-10-07": []

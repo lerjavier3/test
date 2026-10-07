@@ -171,3 +171,10 @@ max minutes reached, exiting for restart
 [10-07 08:54] 08:54 ET pre: equity 98,987, peak 102,073, max dd 3.18%, lev 0.7x, progress -0%, positions 3
 [10-07 09:09] 09:09 ET pre: equity 98,964, peak 102,073, max dd 3.18%, lev 0.7x, progress -0%, positions 3
 [10-07 09:24] 09:24 ET pre: equity 99,025, peak 102,073, max dd 3.18%, lev 0.7x, progress -0%, positions 3
+[10-07 09:39] 09:39 ET regular: equity 98,946, peak 102,073, max dd 3.18%, lev 0.7x, progress -0%, positions 1 | filled 2 @ 253.66: sell 2 AMZN market (close: overnight: sell at the open) [ch-overnight-AMZN-202610070939-1] | filled 11 @ 725.625455: sell 11 META market (close: overnight: sell at the open) [ch-overnight-META-202610070939-2]
+[10-07 09:44] 09:44 ET regular: equity 98,752, peak 102,073, max dd 3.25%, lev 0.62x, progress -0%, positions 1
+[10-07 09:49] 09:49 ET regular: equity 98,757, peak 102,073, max dd 3.25%, lev 0.62x, progress -0%, positions 1
+[10-07 09:54] 09:54 ET regular: equity 98,908, peak 102,073, max dd 3.25%, lev 0.62x, progress -0%, positions 1
+[10-07 09:59] 09:59 ET regular: equity 98,870, peak 102,073, max dd 3.25%, lev 0.62x, progress -0%, positions 1
+[10-07 10:04] 10:04 ET regular: equity 98,667, peak 102,073, max dd 3.34%, lev 0.62x, progress -0%, positions 1
+[10-07 10:09] 10:09 ET regular: equity 98,893, peak 102,073, max dd 3.34%, lev 0.62x, progress -0%, positions 1
