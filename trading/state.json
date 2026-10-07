@@ -13,8 +13,8 @@
   "peak_equity": 102073.19,
   "trough_equity": 99787.74,
   "max_drawdown_pct": 2.09,
-  "last_equity": 100388.78,
-  "last_run_et": "2026-10-06T20:16-04:00",
+  "last_equity": 100439.28,
+  "last_run_et": "2026-10-06T20:20-04:00",
   "mental_stops": {
     "SPY": {
       "stop": 775.99,
@@ -131,6 +131,7 @@
     1.9,
     1.9,
     1.9,
+    1.89,
     1.89,
     1.89,
     1.89,
