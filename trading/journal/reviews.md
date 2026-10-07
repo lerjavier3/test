@@ -50,3 +50,8 @@
 * Change: the daily strategies now trade a wider liquid universe of 38 symbols (the 12 before plus sector ETFs and large caps) instead of 12. Left out until after the challenge: JPM, BAC, UNH, NFLX, PEP, KO, XOM, CVX (earnings may fall before 2026-10-20 or dates unclear).
 * Backtests on the 38 symbols (1100 days, last 120 out of sample): IBS 866 trades in sample, 64% wins, profit factor 1.55; out of sample 176 trades (about 4 times more than on 12 symbols), 56% wins, average win +2.91% vs loss -2.79%, profit factor 1.34. Reversal with the 2 worst stocks a day: 1.14 / 1.10 (54% wins out of sample); 3 worst was flat out of sample (0.99). Overnight on the wide universe loses (0.99 / 0.92), so it is retired.
 * Weights: ibs 0.6, reversal 0.4. Limits raised to 6 positions per strategy and 12 in total; leverage caps unchanged.
+
+## 2026-10-07 (11:05 ET, more ideas tested)
+
+* Daily ideas on the 38 symbol universe (1100 days, last 120 out of sample, 3 ATR stop): daily RSI(2) < 10 above SMA200, exit close above SMA5: 70% wins, profit factor 1.60 in sample; 78% wins, 2.90 out of sample (105 trades; average loss bigger than average win, profitable through the win rate). RSI(2) < 5: 1.54 / 7.06 (52 trades). IBS < 0.1 with RSI(2) < 20: 1.71 / 2.11. Three lower closes: 1.26 / 2.87. Down 3% day: 1.28 / 1.64. IBS < 0.2: 1.30 / 1.32.
+* Change: daily RSI(2) < 10 (rsi2d) goes live. Weights rsi2d 0.4, ibs 0.35, reversal 0.25. One position per symbol, so overlapping signals never double up.

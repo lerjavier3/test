@@ -245,6 +245,29 @@ class IBS:
         return out
 
 
+class RSI2Daily(IBS):
+    """Connors style daily RSI(2) pullback; same live timing and backtest engine as IBS."""
+    name = "rsi2d"
+    indicators = "RSI2, SMA200, SMA5, ATR14 (daily bars)"
+    rules = ("Daily, long only, near the close (about 15:55 ET). Buy when RSI(2) of the daily closes is below 10 and the "
+             "close is above the 200 day simple moving average. Stop 3 x ATR14 (daily) below entry. Sell near the close "
+             "on the first day the close is above the 5 day simple moving average, or after 10 trading days.")
+
+    def prepare(self, bars):
+        c = [b["c"] for b in bars]
+        return {"sma": sma(c, 200), "sma5": sma(c, 5), "rsi": rsi(c, 2), "atr": atr(bars)}
+
+    def entry(self, ind, bars, i):
+        if ind["rsi"][i] < 10 and bars[i]["c"] > ind["sma"][i]:
+            return "long", bars[i]["c"] - 3 * ind["atr"][i], None
+        return None
+
+    def exit(self, ind, bars, i, pos):
+        if bars[i]["c"] > ind["sma5"][i]:
+            return "close above SMA5"
+        return "10 day time stop" if i - pos["entry_i"] >= 10 else None
+
+
 class Reversal:
     """Cross-sectional: the runner ranks all symbols itself (see challenge_run.py)."""
     name, timeframe, warmup, history_days, daily_window = "reversal", "1Day", 2, 1100, True
@@ -264,6 +287,6 @@ class Reversal:
         return None
 
 
-ALL = {s.name: s for s in (Trend(), RSI2(), ORB(), Breakout(), Overnight(), IBS(), Reversal())}
+ALL = {s.name: s for s in (Trend(), RSI2(), ORB(), Breakout(), Overnight(), IBS(), RSI2Daily(), Reversal())}
 
 

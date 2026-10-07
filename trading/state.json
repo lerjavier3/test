@@ -208,8 +208,9 @@
   ],
   "last_options_day": "2026-10-06",
   "weights": {
-    "ibs": 0.6,
-    "reversal": 0.4
+    "rsi2d": 0.4,
+    "ibs": 0.35,
+    "reversal": 0.25
   },
   "owners": {
     "AVGO": {
