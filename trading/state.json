@@ -178,9 +178,9 @@
   ],
   "last_options_day": "2026-10-06",
   "weights": {
-    "breakout": 0.4,
-    "overnight": 0.4,
-    "orb": 0.2
+    "ibs": 0.5,
+    "reversal": 0.25,
+    "overnight": 0.25
   },
   "owners": {
     "AVGO": {

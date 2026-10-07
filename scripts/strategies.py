@@ -184,5 +184,80 @@ class Overnight:
         return None  # time based, handled by the runner
 
 
-ALL = {s.name: s for s in (Trend(), RSI2(), ORB(), Breakout(), Overnight())}
+def sma(xs, n):
+    return [sum(xs[max(0, i - n + 1):i + 1]) / min(i + 1, n) for i in range(len(xs))]
+
+
+def _close_trade(sym, t, entry, exit_):
+    return {"symbol": sym, "t": t, "entry": entry, "exit": exit_}
+
+
+class IBS:
+    """Live: entries and exits only in the 15:50 to 15:58 ET window, on today's (nearly complete) daily bar."""
+    name, timeframe, warmup, history_days, daily_window = "ibs", "1Day", 200, 1100, True
+    universe = STOCKS
+    indicators = "IBS = (close - low) / (high - low), SMA200, ATR14 (daily bars)"
+    rules = ("Daily, long only, near the close (about 15:55 ET). Buy when today's IBS is below 0.1 (close in the bottom "
+             "10% of the day's range) and the close is above the 200 day simple moving average. Stop 3 x ATR14 (daily) "
+             "below entry. Sell near the close on the first day the close is above the previous day's high, or after 5 "
+             "trading days.")
+
+    def prepare(self, bars):
+        c = [b["c"] for b in bars]
+        return {"sma": sma(c, 200), "atr": atr(bars)}
+
+    def entry(self, ind, bars, i):
+        b = bars[i]
+        v = (b["c"] - b["l"]) / (b["h"] - b["l"]) if b["h"] > b["l"] else 0.5
+        if v < 0.1 and b["c"] > ind["sma"][i]:
+            return "long", b["c"] - 3 * ind["atr"][i], None
+        return None
+
+    def exit(self, ind, bars, i, pos):
+        if bars[i]["c"] > bars[i - 1]["h"]:
+            return "close above the previous day's high"
+        return "5 day time stop" if i - pos["entry_i"] >= 5 else None
+
+    def backtest(self, sym, bars):
+        """Enter at the signal day's close; exits at closes; the stop is checked on each later day's low."""
+        ind, out, i = self.prepare(bars), [], self.warmup
+        while i < len(bars) - 1:
+            sig = self.entry(ind, bars, i)
+            if not sig:
+                i += 1
+                continue
+            entry, stop, j, px = bars[i]["c"], sig[1], i + 1, None
+            while j < len(bars):
+                if bars[j]["l"] <= stop:
+                    px = min(bars[j]["o"], stop)
+                    break
+                if self.exit(ind, bars, j, {"entry_i": i}) or j == len(bars) - 1:
+                    px = bars[j]["c"]
+                    break
+                j += 1
+            out.append(_close_trade(sym, bars[i + 1]["t"], entry, px))
+            i = j + 1
+        return out
+
+
+class Reversal:
+    """Cross-sectional: the runner ranks all symbols itself (see challenge_run.py)."""
+    name, timeframe, warmup, history_days, daily_window = "reversal", "1Day", 2, 1100, True
+    universe = STOCKS
+    indicators = "1 day return, ranked across the universe (daily bars)"
+    rules = ("Daily, near the close (about 15:55 ET): buy the one stock or ETF of the universe with the worst return "
+             "since yesterday's close. Sell at the next regular open (09:30 to 09:35 ET). Emergency stop 3% below entry.")
+
+    def prepare(self, bars):
+        return {}
+
+    def entry(self, ind, bars, i):
+        return None
+
+    def exit(self, ind, bars, i, pos):
+        return None
+
+
+ALL = {s.name: s for s in (Trend(), RSI2(), ORB(), Breakout(), Overnight(), IBS(), Reversal())}
+
 

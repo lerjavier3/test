@@ -40,6 +40,8 @@ def fetch_symbol(sym, timeframe, start, end):
     os.makedirs(CACHE, exist_ok=True)
     path = os.path.join(CACHE, f"{timeframe}_{sym.replace('/', '')}.json")
     bars = json.load(open(path)) if os.path.exists(path) else []
+    if bars and bars[0]["t"][:10] > (datetime.date.fromisoformat(start[:10]) + datetime.timedelta(days=7)).isoformat():
+        bars = []  # cache starts later than this request needs: refetch the full history
     bars = [b for b in bars if b["t"] >= start]
     since = bars[-1]["t"] if bars else start
     crypto = "/" in sym
@@ -114,6 +116,21 @@ def overnight_trades(strategy, sym, bars):
     for i in range(strategy.warmup, len(bars) - 1):
         if strategy.entry(ind, bars, i):
             out.append({"symbol": sym, "t": bars[i + 1]["t"], "ret": bars[i + 1]["o"] / bars[i]["c"] - 1 - 2 * cost(sym)})
+    return out
+
+
+def reversal_trades(data):
+    """Buy the worst 1 day return of the universe at the close, sell at the next open."""
+    dates = sorted({b["t"][:10] for bars in data.values() for b in bars})
+    by = {s: {b["t"][:10]: b for b in bars} for s, bars in data.items()}
+    out = []
+    for i in range(1, len(dates) - 1):
+        rets = [(by[s][dates[i]]["c"] / by[s][dates[i - 1]]["c"] - 1, s) for s in by
+                if dates[i - 1] in by[s] and dates[i] in by[s] and dates[i + 1] in by[s]]
+        if rets:
+            s = min(rets)[1]
+            nxt = by[s][dates[i + 1]]
+            out.append({"symbol": s, "t": nxt["t"], "ret": nxt["o"] / by[s][dates[i]]["c"] - 1 - 2 * cost(s)})
     return out
 
 
@@ -202,16 +219,27 @@ def main():
     end = (now - datetime.timedelta(minutes=30)).strftime("%Y-%m-%dT%H:%M:%SZ")  # free SIP data needs a 15 min delay
     split = (now - datetime.timedelta(days=OOS_DAYS)).strftime("%Y-%m-%dT%H:%M:%SZ")
     lines = ["# Strategy scoreboard (PAPER challenge)", "",
-             f"Updated {datetime.datetime.now(S.ET):%Y-%m-%d %H:%M} ET. Backtest: 400 days of Alpaca bars, "
+             f"Updated {datetime.datetime.now(S.ET):%Y-%m-%d %H:%M} ET. Backtest: 400 days of Alpaca bars (1100 for daily "
+             "strategies), "
              f"in sample before {split[:10]}, out of sample after (never tuned on). Per trade returns, unlevered, "
              "after costs. Live: Alpaca fills since the challenge started.", "",
              "| Strategy | Period | Trades | Win rate | Avg win / avg loss | Profit (sum of trade returns) | "
              "Profit factor | Indicators |", "| --- | --- | --- | --- | --- | --- | --- | --- |"]
     for n in names:
         strat = S.ALL[n]
+        days = getattr(strat, "history_days", 400)
+        data = fetch(strat, (now - datetime.timedelta(days=days)).strftime("%Y-%m-%dT%H:%M:%SZ"), end)
         trades = []
-        for sym, bars in fetch(strat, start, end).items():
-            trades += overnight_trades(strat, sym, bars) if n == "overnight" else simulate(strat, sym, bars)
+        if n == "reversal":
+            trades = reversal_trades(data)
+        for sym, bars in data.items():
+            if n == "overnight":
+                trades += overnight_trades(strat, sym, bars)
+            elif hasattr(strat, "backtest"):
+                trades += [{**t, "ret": (t["exit"] - t["entry"]) / t["entry"] - 2 * cost(sym)}
+                           for t in strat.backtest(sym, bars)]
+            elif n != "reversal":
+                trades += simulate(strat, sym, bars)
         ins = [t for t in trades if t["t"] < split]
         oos = [t for t in trades if t["t"] >= split]
         lines.append(row(n, "backtest in sample", stats(ins), strat.indicators))

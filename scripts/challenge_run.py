@@ -196,10 +196,12 @@ class Tick:
                 self.close(p, f"stop {ms['stop']} hit at {px}")
                 continue
             strat = S.ALL.get(own["strategy"])
-            if strat and strat.name == "overnight":
+            if strat and strat.name in ("overnight", "reversal"):
                 if self.session == "regular" and own["entry_time"][:10] < self.now.date().isoformat():
-                    self.close(p, "overnight: sell at the open")
+                    self.close(p, f"{strat.name}: sell at the open")
                 continue
+            if strat and strat.timeframe == "1Day" and not (self.session == "regular" and hm >= 15 * 60 + 50):
+                continue  # daily strategies decide on the (nearly complete) daily bar, near the close
             if strat and strat.name == "orb" and (self.session != "regular" or hm >= 15 * 60 + 50):
                 self.close(p, "orb: 15:50 ET close")
                 continue
@@ -207,7 +209,8 @@ class Tick:
             if data and len(data["bars"]) > strat.warmup:
                 bars, ind = data["bars"], data["ind"][strat.name]
                 i = len(bars) - 1
-                entry_i = next((j for j, b in enumerate(bars) if b["t"] >= own["entry_time"]), i)
+                key_len = 10 if strat.timeframe == "1Day" else 19
+                entry_i = next((j for j, b in enumerate(bars) if b["t"][:key_len] >= own["entry_time"][:key_len]), i)
                 reason = strat.exit(ind, bars, i, {"side": own["side"], "entry_i": entry_i})
                 if reason:
                     self.close(p, f"{strat.name}: {reason}")
@@ -304,13 +307,17 @@ class Tick:
             s_gross = sum(abs(float(p["market_value"])) for p in self.positions
                           if ch_symbol(p) in mine and p["symbol"] not in self.closed)
             risk = RISK * self.equity * w * len(weights) * (1 if self.session == "regular" else 0.5)
-            if name == "overnight" and not (self.session == "regular" and 15 * 60 + 50 <= hm <= 15 * 60 + 58):
-                continue
+            if strat.timeframe == "1Day" and not (self.session == "regular" and 15 * 60 + 50 <= hm <= 15 * 60 + 58):
+                continue  # daily strategies enter near the close only
             pool = self.data.get(strat.timeframe, {})
             order = list(pool)
             if name == "overnight":  # strongest first: furthest above the 20 day average
                 order.sort(key=lambda k: -(pool[k]["bars"][-1]["c"] / pool[k]["ind"][name]["sma"][-1])
                            if pool[k]["bars"] and name in pool[k]["ind"] else 0)
+            if name == "reversal":  # only the single worst 1 day return of the universe
+                rets = [(pool[k]["bars"][-1]["c"] / pool[k]["bars"][-2]["c"] - 1, k) for k in order
+                        if len(pool[k]["bars"]) >= 2]
+                order = [min(rets)[1]] if rets else []
             for sym in order:
                 data = pool[sym]
                 if len(held) >= MAX_POSITIONS or len(mine) >= MAX_PER_STRATEGY:
@@ -329,7 +336,8 @@ class Tick:
                 if not crypto and (not day or name == "overnight") and self.earnings_soon(sym):
                     continue
                 bars = data["bars"]
-                sig = strat.entry(data["ind"][name], bars, len(bars) - 1)
+                sig = ("long", bars[-1]["c"] * 0.97, None) if name == "reversal" else \
+                    strat.entry(data["ind"][name], bars, len(bars) - 1)
                 if not sig:
                     continue
                 side, stop, r = sig
@@ -504,7 +512,7 @@ def market_data(session):
         need["1Day"] = S.STOCKS
     out = {}
     for tf, syms in need.items():
-        days = {"1Hour": 45, "5Min": 1, "1Day": 60}[tf]
+        days = {"1Hour": 45, "5Min": 1, "1Day": 320}[tf]  # 320 calendar days covers SMA200
         floor = (now - datetime.timedelta(days=days)).strftime("%Y-%m-%dT%H:%M:%SZ")
         last = min((BAR_CACHE.get((tf, s)) or [{"t": floor}])[-1]["t"] for s in syms)
         new = fetch_bars(tf, syms, max(last, floor))

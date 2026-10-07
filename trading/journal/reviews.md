@@ -39,3 +39,8 @@
 * Fixed: churn at the overnight limit. MSFT was bought at 15:53 up to 1.9x, a small move put gross just above 1.9x and the 15:58 trim sold it at a loss. Late and overnight entries now stop at 1.8x, while the trim stays at 1.9x.
 * No weight change (breakout 0.4, overnight 0.4, orb 0.2). Backtests unchanged: no strategy is profitable in both periods with margin to spare; the search continues.
 * Earnings: no traded stock reports within 7 days (TSLA expected 2026-10-21).
+
+## 2026-10-07 (02:53 ET, user request: wider search)
+
+* Tested (scripts/strategy_ideas.py, 400 days of 5 minute bars or 1100 days of daily bars, last 120 days out of sample): intraday momentum (first 30 minutes predicting the last 30) loses (profit factor 0.59 to 0.66 in sample); gap fade and gap and go lose or are flat in sample (0.78 to 0.96); NR7 breakouts lose (0.65 to 0.80). Cross-sectional reversal (buy the worst 1 day stock at the close, sell at the next open) 1.11 in sample, 1.34 out of sample, 60% wins out of sample. IBS < 0.1 above SMA200: ETFs 2.98 / 2.78 (68% / 65% wins, average win bigger than average loss), stocks 1.83 / 1.63 (65% / 62%). With a 3 ATR stop added (required on every trade) IBS on all 12 symbols: 1.80 in sample, 62% wins out of sample. Crypto daily trend above SMA50: 1.92 / 9.42 but only 9 out of sample trades, too few; kept as a candidate.
+* Change: new live weights ibs 0.5, reversal 0.25, overnight 0.25. Breakout (0.96 out of sample) and orb (0.88) go to weight 0; their open positions are still managed by their exit rules.

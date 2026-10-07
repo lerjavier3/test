@@ -27,7 +27,7 @@ for tf in DATA.values():
             ind["sym"] = sym
 cr.market_data = lambda session: DATA
 FORCED = {("breakout", "NVDA"): "long", ("orb", "QQQ"): "long", ("overnight", "AAPL"): "long",
-          ("overnight", "MSFT"): "long", ("trend", "TSLA"): "short"}  # trend has weight 0: must not trade
+          ("overnight", "MSFT"): "long", ("trend", "TSLA"): "short", ("ibs", "SPY"): "long"}  # trend has weight 0: must not trade
 def forced(name):
     def entry(ind, bars, i):
         side = FORCED.get((name, ind.get("sym")))
