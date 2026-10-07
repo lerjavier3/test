@@ -147,3 +147,4 @@ max minutes reached, exiting for restart
 [10-07 04:08] 04:08 ET pre: equity 99,884, peak 102,073, max dd 2.39%, lev 1.9x, progress -0%, positions 5 | pending_new 0 @ None: sell 171 GOOGL stop trigger 337.25 (backup broker stop) [ch-stop-GOOGL-202610070408-1]
 [10-07 04:23] 04:23 ET pre: equity 99,995, peak 102,073, max dd 2.39%, lev 1.9x, progress -0%, positions 5
 [10-07 04:38] 04:38 ET pre: equity 99,875, peak 102,073, max dd 2.39%, lev 1.9x, progress -0%, positions 5
+max minutes reached, exiting for restart
