@@ -1,5 +1,5 @@
 {
-  "_source": "Expected dates from a web search on 2026-10-06 (cnbc.com, days.to, siliconanalysts.com); not all confirmed. The daily review rechecks them. AMD and AVGO were not listed; both usually report after 2026-10-20.",
+  "_source": "Expected dates from a web search on 2026-10-06 (cnbc.com, days.to, siliconanalysts.com); not all confirmed. The daily review rechecks them. AMD and AVGO were not listed; both usually report after 2026-10-20. 2026-10-07: JPM, BAC, UNH, NFLX, PEP, KO, XOM and CVX may report before 2026-10-20 or have unclear dates (earningswhispers.com, financhle.com search results conflicted), so they are excluded from the universe instead. V, MA, LLY, INTC, COIN, UBER, BRK.B usually report late October or November; COST, WMT, HD, CRM, ORCL, ADBE, QCOM, MU, PLTR report in November or December.",
   "TSLA": "2026-10-21",
   "GOOGL": "2026-10-28",
   "META": "2026-10-28",

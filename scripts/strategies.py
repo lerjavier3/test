@@ -15,6 +15,11 @@ ET = ZoneInfo("America/New_York")
 STOCKS = ["QQQ", "SPY", "IWM", "NVDA", "TSLA", "AAPL", "MSFT", "AMZN", "META", "AMD", "GOOGL", "AVGO"]
 CRYPTO = ["BTC/USD", "ETH/USD", "SOL/USD"]
 ORB_UNIVERSE = ["QQQ", "SPY", "NVDA", "TSLA", "AMD"]
+# Wider liquid universe for the daily strategies: more symbols, more trades, same rules.
+# Left out until after the challenge: stocks that may report earnings before 2026-10-20 or whose date is unclear
+# (JPM, BAC, UNH, NFLX, PEP, KO, XOM, CVX), see trading/earnings.json.
+WIDE = STOCKS + ["DIA", "SMH", "XLK", "XLF", "XLE", "XLV", "XLY", "XLI", "XLP", "XLU", "V", "MA", "LLY", "COST",
+                 "WMT", "HD", "CRM", "ORCL", "ADBE", "INTC", "QCOM", "MU", "PLTR", "COIN", "UBER", "BRK.B"]
 
 
 def ema(xs, n):
@@ -195,7 +200,7 @@ def _close_trade(sym, t, entry, exit_):
 class IBS:
     """Live: entries and exits only in the 15:50 to 15:58 ET window, on today's (nearly complete) daily bar."""
     name, timeframe, warmup, history_days, daily_window = "ibs", "1Day", 200, 1100, True
-    universe = STOCKS
+    universe = WIDE
     indicators = "IBS = (close - low) / (high - low), SMA200, ATR14 (daily bars)"
     rules = ("Daily, long only, near the close (about 15:55 ET). Buy when today's IBS is below 0.1 (close in the bottom "
              "10% of the day's range) and the close is above the 200 day simple moving average. Stop 3 x ATR14 (daily) "
@@ -243,9 +248,10 @@ class IBS:
 class Reversal:
     """Cross-sectional: the runner ranks all symbols itself (see challenge_run.py)."""
     name, timeframe, warmup, history_days, daily_window = "reversal", "1Day", 2, 1100, True
-    universe = STOCKS
+    universe = WIDE
+    k = 2  # buy the k worst
     indicators = "1 day return, ranked across the universe (daily bars)"
-    rules = ("Daily, near the close (about 15:55 ET): buy the one stock or ETF of the universe with the worst return "
+    rules = ("Daily, near the close (about 15:55 ET): buy the 2 stocks or ETFs of the universe with the worst return "
              "since yesterday's close. Sell at the next regular open (09:30 to 09:35 ET). Emergency stop 3% below entry.")
 
     def prepare(self, bars):

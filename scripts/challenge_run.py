@@ -32,8 +32,8 @@ RISK = 0.025                # equity risked per trade at equal weights (scaled b
 GROSS_REGULAR = 3.5         # max gross exposure / equity in the regular session
 GROSS_OVERNIGHT = 1.9       # held through the close and outside regular hours
 GROSS_OVERNIGHT_ENTRY = 1.8 # new entries after 15:40 ET and outside regular hours stop here
-MAX_POSITIONS = 8           # all strategies combined
-MAX_PER_STRATEGY = 3
+MAX_POSITIONS = 12          # all strategies combined
+MAX_PER_STRATEGY = 6
 OPEN_STATUSES = ("new", "accepted", "held", "partially_filled", "pending_new", "accepted_for_bidding")
 EARNINGS = os.path.join(ch.ROOT, "trading", "earnings.json")
 COOLDOWN_MIN = 60           # no re-entry in a symbol for an hour after closing it
@@ -314,10 +314,10 @@ class Tick:
             if name == "overnight":  # strongest first: furthest above the 20 day average
                 order.sort(key=lambda k: -(pool[k]["bars"][-1]["c"] / pool[k]["ind"][name]["sma"][-1])
                            if pool[k]["bars"] and name in pool[k]["ind"] else 0)
-            if name == "reversal":  # only the single worst 1 day return of the universe
+            if name == "reversal":  # only the k worst 1 day returns of the universe
                 rets = [(pool[k]["bars"][-1]["c"] / pool[k]["bars"][-2]["c"] - 1, k) for k in order
                         if len(pool[k]["bars"]) >= 2]
-                order = [min(rets)[1]] if rets else []
+                order = [k for _, k in sorted(rets)[:strat.k]]
             for sym in order:
                 data = pool[sym]
                 if len(held) >= MAX_POSITIONS or len(mine) >= MAX_PER_STRATEGY:
@@ -509,7 +509,7 @@ def market_data(session):
     need = {"1Hour": S.STOCKS + S.CRYPTO}
     if session == "regular":
         need["5Min"] = S.ORB_UNIVERSE
-        need["1Day"] = S.STOCKS
+        need["1Day"] = S.WIDE
     out = {}
     for tf, syms in need.items():
         days = {"1Hour": 45, "5Min": 1, "1Day": 320}[tf]  # 320 calendar days covers SMA200

@@ -44,3 +44,9 @@
 
 * Tested (scripts/strategy_ideas.py, 400 days of 5 minute bars or 1100 days of daily bars, last 120 days out of sample): intraday momentum (first 30 minutes predicting the last 30) loses (profit factor 0.59 to 0.66 in sample); gap fade and gap and go lose or are flat in sample (0.78 to 0.96); NR7 breakouts lose (0.65 to 0.80). Cross-sectional reversal (buy the worst 1 day stock at the close, sell at the next open) 1.11 in sample, 1.34 out of sample, 60% wins out of sample. IBS < 0.1 above SMA200: ETFs 2.98 / 2.78 (68% / 65% wins, average win bigger than average loss), stocks 1.83 / 1.63 (65% / 62%). With a 3 ATR stop added (required on every trade) IBS on all 12 symbols: 1.80 in sample, 62% wins out of sample. Crypto daily trend above SMA50: 1.92 / 9.42 but only 9 out of sample trades, too few; kept as a candidate.
 * Change: new live weights ibs 0.5, reversal 0.25, overnight 0.25. Breakout (0.96 out of sample) and orb (0.88) go to weight 0; their open positions are still managed by their exit rules.
+
+## 2026-10-07 (10:57 ET, user request: more trades)
+
+* Change: the daily strategies now trade a wider liquid universe of 38 symbols (the 12 before plus sector ETFs and large caps) instead of 12. Left out until after the challenge: JPM, BAC, UNH, NFLX, PEP, KO, XOM, CVX (earnings may fall before 2026-10-20 or dates unclear).
+* Backtests on the 38 symbols (1100 days, last 120 out of sample): IBS 866 trades in sample, 64% wins, profit factor 1.55; out of sample 176 trades (about 4 times more than on 12 symbols), 56% wins, average win +2.91% vs loss -2.79%, profit factor 1.34. Reversal with the 2 worst stocks a day: 1.14 / 1.10 (54% wins out of sample); 3 worst was flat out of sample (0.99). Overnight on the wide universe loses (0.99 / 0.92), so it is retired.
+* Weights: ibs 0.6, reversal 0.4. Limits raised to 6 positions per strategy and 12 in total; leverage caps unchanged.

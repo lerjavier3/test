@@ -119,16 +119,15 @@ def overnight_trades(strategy, sym, bars):
     return out
 
 
-def reversal_trades(data):
-    """Buy the worst 1 day return of the universe at the close, sell at the next open."""
+def reversal_trades(data, k=2):
+    """Buy the k worst 1 day returns of the universe at the close, sell at the next open."""
     dates = sorted({b["t"][:10] for bars in data.values() for b in bars})
     by = {s: {b["t"][:10]: b for b in bars} for s, bars in data.items()}
     out = []
     for i in range(1, len(dates) - 1):
         rets = [(by[s][dates[i]]["c"] / by[s][dates[i - 1]]["c"] - 1, s) for s in by
                 if dates[i - 1] in by[s] and dates[i] in by[s] and dates[i + 1] in by[s]]
-        if rets:
-            s = min(rets)[1]
+        for _, s in sorted(rets)[:k]:
             nxt = by[s][dates[i + 1]]
             out.append({"symbol": s, "t": nxt["t"], "ret": nxt["o"] / by[s][dates[i]]["c"] - 1 - 2 * cost(s)})
     return out
@@ -231,7 +230,7 @@ def main():
         data = fetch(strat, (now - datetime.timedelta(days=days)).strftime("%Y-%m-%dT%H:%M:%SZ"), end)
         trades = []
         if n == "reversal":
-            trades = reversal_trades(data)
+            trades = reversal_trades(data, strat.k)
         for sym, bars in data.items():
             if n == "overnight":
                 trades += overnight_trades(strat, sym, bars)
