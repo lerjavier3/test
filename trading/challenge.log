@@ -117,3 +117,7 @@ max minutes reached, exiting for restart
 [10-06 22:05] 22:05 ET overnight: equity 99,914, peak 102,073, max dd 2.12%, lev 1.9x, progress -0%, positions 5
 max minutes reached, exiting for restart
 [10-06 22:10] 22:10 ET overnight: equity 99,780, peak 102,073, max dd 2.25%, lev 1.9x, progress -0%, positions 5
+[10-06 22:25] 22:25 ET overnight: equity 99,634, peak 102,073, max dd 2.39%, lev 1.9x, progress -0%, positions 5 | REJECTED sell 171 GOOGL limit @345.56 (close: trim gross to 1.9x): {'error': '{"available":"0","code":40310000,"existing_qty":"171","held_for_orders":"171","message":"insufficient qty available for order (requested: 171, availa
+[10-06 22:40] 22:40 ET overnight: equity 99,849, peak 102,073, max dd 2.39%, lev 1.9x, progress -0%, positions 5
+[10-06 22:55] 22:55 ET overnight: equity 99,878, peak 102,073, max dd 2.39%, lev 1.9x, progress -0%, positions 5
+[10-06 23:10] 23:10 ET overnight: equity 99,974, peak 102,073, max dd 2.39%, lev 1.9x, progress -0%, positions 5
