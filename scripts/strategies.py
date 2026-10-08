@@ -255,6 +255,31 @@ class IBS:
         return out
 
 
+class BBDip(IBS):
+    """Close below the lower Bollinger band in an uptrend; same live timing, exit and backtest engine as IBS."""
+    name = "bbdip"
+    indicators = "SMA20, 20 day standard deviation (Bollinger 20, 2), SMA200, ATR14 (daily bars)"
+    rules = ("Daily, long only, near the close (about 15:55 ET). Buy when the close is below the lower Bollinger band "
+             "(20 day SMA minus 2 x the 20 day standard deviation of closes) and above the 200 day simple moving average. "
+             "Stop 3 x ATR14 (daily) below entry. Sell near the close on the first day the close is above the previous "
+             "day's high, or after 5 trading days.")
+
+    def prepare(self, bars):
+        c = [b["c"] for b in bars]
+        lower = []
+        for i in range(len(c)):
+            w = c[max(0, i - 19):i + 1]
+            m = sum(w) / len(w)
+            lower.append(m - 2 * (sum((x - m) ** 2 for x in w) / len(w)) ** 0.5)
+        return {"sma": sma(c, 200), "lower": lower, "atr": atr(bars)}
+
+    def entry(self, ind, bars, i):
+        c = bars[i]["c"]
+        if c < ind["lower"][i] and c > ind["sma"][i]:
+            return "long", c - 3 * ind["atr"][i], None
+        return None
+
+
 class RSI2Daily(IBS):
     """Connors style daily RSI(2) pullback; same live timing and backtest engine as IBS."""
     name = "rsi2d"
@@ -297,6 +322,6 @@ class Reversal:
         return None
 
 
-ALL = {s.name: s for s in (Trend(), RSI2(), ORB(), Breakout(), Overnight(), IBS(), RSI2Daily(), Reversal())}
+ALL = {s.name: s for s in (Trend(), RSI2(), ORB(), Breakout(), Overnight(), IBS(), RSI2Daily(), Reversal(), BBDip())}
 
 

@@ -75,3 +75,13 @@
 ## 2026-10-08 (07:35 ET, user request: risk up to 10% on the best setups)
 
 * Change: A+ setups (RSI(2) < 5 and IBS < 0.15, above SMA200) now risk 10% of equity (was 8%), up to 1x equity in one position. Normal setups stay at 4%. Combined caps and stops unchanged. The search for new setups continues in every daily review.
+
+## 2026-10-08 (daily review, 16:30 ET)
+
+* Alpaca equity $96,885 (−3.1% since start). Today: COIN reversal sold at the open (−$660). Near the close the bot bought SMH (rsi2d), NVDA (ibs), ORCL and INTC (reversal); AVGO and META still held. 6 positions, 1.79x.
+* Tested (new families in `scripts/strategy_ideas.py`, wide universe, 1100 days, in sample vs last 120 days):
+  * Down streak (n lower closes, above SMA200): n5 PF 2.25 / 12.9 (only 23 trades out of sample), n3 PF 1.30 / 2.87.
+  * Bollinger dip (close below SMA20 minus k standard deviations, above SMA200): 2.0sd PF 1.82 / 42.0 (79% wins out of sample), 1.5sd PF 1.32 / 5.97, 2.5sd PF 2.71 / all 10 out of sample trades won.
+  * Cross-sectional reversal limited to symbols above SMA200: k2 PF 1.19 / 1.08, no better than the live reversal.
+* Change: promoted `bbdip` (Bollinger 20, 2 dip above SMA200, IBS style exit, stop 3 ATR). Official backtest with stops: 228 trades in sample, 66% wins, PF 1.73; 28 trades out of sample, 79% wins, avg +3.21% vs −0.28%, PF 42. It beats ibs (1.60 / 1.29) and reversal (1.13 / 1.14) in both periods. Weights now rsi2d 0.4, bbdip 0.3, ibs 0.3, reversal 0 (it still sells ORCL and INTC at the next open). A+ sizing now also applies to bbdip signals. Tests pass.
+* Earnings: nothing within 7 days for held or universe stocks.

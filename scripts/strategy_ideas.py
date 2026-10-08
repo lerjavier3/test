@@ -173,7 +173,73 @@ def crypto_trend(n):
     return f"crypto trend sma{n}", "1Day", S.CRYPTO, 1100, run
 
 
+def _hold_to_prior_high(bars, i, max_days=5):
+    """Exit index: the first close above the previous day's high, or after max_days."""
+    j = i + 1
+    while j < len(bars) - 1 and bars[j]["c"] <= bars[j - 1]["h"] and j - i < max_days:
+        j += 1
+    return j
+
+
+def down_streak(n):
+    """Daily, WIDE: n lower closes in a row while above SMA200 -> buy at the close; exit as IBS."""
+    def run(d):
+        out = []
+        for s, bars in d.items():
+            c, i = [b["c"] for b in bars], 200
+            while i < len(bars) - 1:
+                if all(c[i - k] < c[i - k - 1] for k in range(n)) and c[i] > sum(c[i - 199:i + 1]) / 200:
+                    j = _hold_to_prior_high(bars, i)
+                    out.append(trade(s, bars[i + 1]["t"], "long", c[i], bars[j]["c"]))
+                    i = j
+                i += 1
+        return out
+    return f"down streak {n} wide", "1Day", S.WIDE, 1100, run
+
+
+def bollinger_dip(k):
+    """Daily, WIDE: close below SMA20 - k*stdev20 while above SMA200 -> buy at the close; exit as IBS."""
+    def run(d):
+        out = []
+        for s, bars in d.items():
+            c, i = [b["c"] for b in bars], 200
+            while i < len(bars) - 1:
+                w = c[i - 19:i + 1]
+                m = sum(w) / 20
+                sd = (sum((x - m) ** 2 for x in w) / 20) ** 0.5
+                if c[i] < m - k * sd and c[i] > sum(c[i - 199:i + 1]) / 200:
+                    j = _hold_to_prior_high(bars, i)
+                    out.append(trade(s, bars[i + 1]["t"], "long", c[i], bars[j]["c"]))
+                    i = j
+                i += 1
+        return out
+    return f"bollinger dip {k}sd wide", "1Day", S.WIDE, 1100, run
+
+
+def xs_reversal_trend(k):
+    """Daily, WIDE: buy the k worst 1 day returns among symbols above SMA200; sell at the next open."""
+    def run(d):
+        dates = sorted({b["t"][:10] for bars in d.values() for b in bars})
+        by = {s: {b["t"][:10]: (i, b) for i, b in enumerate(bars)} for s, bars in d.items()}
+        out = []
+        for i in range(201, len(dates) - 1):
+            rets = []
+            for s, bars in d.items():
+                a, b, n = by[s].get(dates[i - 1]), by[s].get(dates[i]), by[s].get(dates[i + 1])
+                if a and b and n and b[0] >= 200:
+                    c = [x["c"] for x in bars[b[0] - 199:b[0] + 1]]
+                    if b[1]["c"] > sum(c) / 200:
+                        rets.append((b[1]["c"] / a[1]["c"] - 1, s))
+            for r, s in sorted(rets)[:k]:
+                out.append(trade(s, by[s][dates[i + 1]][1]["t"], "long", by[s][dates[i]][1]["c"], by[s][dates[i + 1]][1]["o"]))
+        return out
+    return f"xs reversal above sma200 k{k} wide", "1Day", S.WIDE, 1100, run
+
+
 FAMILIES = {
+    "streak": [down_streak(n) for n in (3, 4, 5)],
+    "bollinger": [bollinger_dip(k) for k in (1.5, 2.0, 2.5)],
+    "revtrend": [xs_reversal_trend(k) for k in (1, 2, 3)],
     "momentum": [intraday_momentum(th, sh) for th, sh in itertools.product((0.0, 0.0025, 0.005), (False, True))],
     "gap": [gap(g, m) for g, m in itertools.product((0.005, 0.01, 0.02), ("fade", "go"))],
     "reversal": [xs_reversal(k, h) for k, h in itertools.product((1, 2, 3), ("open", "close"))],

@@ -30,17 +30,17 @@ Be honest in every report: 5x in two weeks is very unlikely. Numbers always come
 * Keep `trading/PLAYBOOK.md` of proven strategies (exact rules, indicators, win rate, average win vs loss, works without leverage or not) for later real money use.
 * User preferences: no dashes in answers; deliverables as Markdown files.
 
-## 3. Live strategies now (2026-10-08)
+## 3. Live strategies now (2026-10-08 review)
 
 Defined in `scripts/strategies.py` (shared by the live runner and the backtester). Weights in `trading/state.json` → `weights`. All three trade only near the close, 15:50 to 15:58 ET, on 38 liquid symbols (`S.WIDE`).
 
 | Strategy | Weight | Entry | Exit | Backtest (in sample / last 120 days) |
 | --- | --- | --- | --- | --- |
-| `rsi2d` | 0.4 | Daily RSI(2) < 10 and close > SMA200 | Close > SMA5, or 10 days; stop 3 ATR(14) | PF 1.60 (70% wins) / 2.90 (78%) |
-| `ibs` | 0.35 | IBS < 0.1 and close > SMA200 | Close > previous day's high, or 5 days; stop 3 ATR(14) | PF 1.55 (64%) / 1.34 (56%) |
-| `reversal` | 0.25 | Buy the 2 worst 1 day returns of the universe | Next regular open; 3% emergency stop | PF 1.14 / 1.10 (54%) |
+| `rsi2d` | 0.4 | Daily RSI(2) < 10 and close > SMA200 | Close > SMA5, or 10 days; stop 3 ATR(14) | PF 1.55 (70% wins) / 3.71 (77%) |
+| `bbdip` | 0.3 | Close below lower Bollinger band (SMA20 minus 2 standard deviations) and close > SMA200 | Close > previous day's high, or 5 days; stop 3 ATR(14) | PF 1.73 (66%) / 42 (79%, 28 trades) |
+| `ibs` | 0.3 | IBS < 0.1 and close > SMA200 | Close > previous day's high, or 5 days; stop 3 ATR(14) | PF 1.60 (65%) / 1.29 (56%) |
 
-Retired (weight 0, they only manage leftover positions): `trend`, `rsi2`, `orb`, `breakout`, `overnight`. Candidate not live: crypto daily trend above SMA50 (too few recent trades).
+Retired (weight 0, they only manage leftover positions): `reversal` (2026-10-08, PF 1.13 / 1.14, weakest), `trend`, `rsi2`, `orb`, `breakout`, `overnight`. Candidate not live: crypto daily trend above SMA50 (too few recent trades).
 
 Universe excludes JPM, BAC, UNH, NFLX, PEP, KO, XOM, CVX (earnings may fall before 2026-10-20). Earnings dates: `trading/earnings.json`.
 
@@ -49,7 +49,7 @@ Universe excludes JPM, BAC, UNH, NFLX, PEP, KO, XOM, CVX (earnings may fall befo
 | Rule | Value |
 | --- | --- |
 | Normal risk per trade | 4% of equity at equal weights, scaled by the strategy's weight × number of strategies (half outside regular hours) |
-| **A+ setup** (`rsi2d` or `ibs` signal that also has RSI(2) < 5 and IBS < 0.15) | **10% of equity at risk**, up to 1x equity in one position, may use free capacity beyond its strategy's share. Backtest PF 2.16 in sample, 92% wins out of sample |
+| **A+ setup** (`rsi2d`, `bbdip` or `ibs` signal that also has RSI(2) < 5 and IBS < 0.15) | **10% of equity at risk**, up to 1x equity in one position, may use free capacity beyond its strategy's share. Backtest PF 2.16 in sample, 92% wins out of sample |
 | One position cap | 1.0x equity intraday, 0.6x after 15:40 ET and outside regular hours (A+ up to 1.0x) |
 | Gross exposure | 3.5x intraday; new entries after 15:40 ET stop at 1.8x; trim to 1.9x from 15:45 ET and outside regular hours |
 | Positions | at most 6 per strategy, 12 total, one per symbol |
@@ -97,3 +97,4 @@ Paper only guard (refuses unless the paper endpoint, `ALPACA_PAPER` not false, `
 * 2026-10-06: built the bot; first strategy (hourly trend) lost in backtests and live; multi strategy framework, backtester and scoreboard added; floor removed; goal raised to 5x by 2026-10-20; bugs fixed (overnight limit churn, partial fills counted as trades, loop sleeping past its exit, detached process dying, rate limits).
 * 2026-10-07: wider search; IBS and reversal promoted; universe widened to 38 symbols; daily RSI(2) added; reversal capital split fixed.
 * 2026-10-08: risk per trade raised to 4%; A+ setups get 10% risk and up to 1x equity. Equity before the open: $97,869.73 (−2.1% since start).
+* 2026-10-08 review: `bbdip` promoted, `reversal` set to weight 0. Equity $96,885.

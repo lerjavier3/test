@@ -365,7 +365,7 @@ class Tick:
                     continue
                 room = min(cap - gross, w * cap - s_gross, 0.95 * bp)
                 size_cap, size_risk, grade = pos_cap, risk, ""
-                if name in ("rsi2d", "ibs") and S.aplus(bars):  # A+ setup: 10% risk, up to 1x equity
+                if name in ("rsi2d", "ibs", "bbdip") and S.aplus(bars):  # A+ setup: 10% risk, up to 1x equity
                     size_cap, size_risk, grade = max(pos_cap, APLUS_POS_CAP * self.equity), APLUS_RISK * self.equity, " A+"
                     room = min(cap - gross, 0.95 * bp)  # may use free capacity beyond the strategy's share
                 if name == "reversal":  # split the strategy's share across its k picks
