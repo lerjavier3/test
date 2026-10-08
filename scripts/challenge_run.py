@@ -36,6 +36,7 @@ MAX_POSITIONS = 12          # all strategies combined
 MAX_PER_STRATEGY = 6
 OPEN_STATUSES = ("new", "accepted", "held", "partially_filled", "pending_new", "accepted_for_bidding")
 EARNINGS = os.path.join(ch.ROOT, "trading", "earnings.json")
+APLUS_POS_CAP = 1.0         # A+ setups may use up to 1x equity in one position (gross caps still apply)
 COOLDOWN_MIN = 60           # no re-entry in a symbol for an hour after closing it
 POS_CAP_REGULAR = 1.0       # max value of one stock position / equity, regular session
 POS_CAP_OVERNIGHT = 0.6     # same, after 15:40 ET and outside regular hours
@@ -362,9 +363,13 @@ class Tick:
                         self.opened(sym, name, side, stop, held, mine)
                     continue
                 room = min(cap - gross, w * cap - s_gross, 0.95 * bp)
+                size_cap, size_risk, grade = pos_cap, risk, ""
+                if name in ("rsi2d", "ibs") and S.aplus(bars):  # A+ setup: double risk, up to 1x equity
+                    size_cap, size_risk, grade = max(pos_cap, APLUS_POS_CAP * self.equity), 2 * risk, " A+"
+                    room = min(cap - gross, 0.95 * bp)  # may use free capacity beyond the strategy's share
                 if name == "reversal":  # split the strategy's share across its k picks
                     room = min(room, w * cap / strat.k)
-                qty = int(min(risk / per_unit, room / px, pos_cap / px))
+                qty = int(min(size_risk / per_unit, room / px, size_cap / px))
                 if qty < 1:
                     continue
                 body = {"symbol": sym, "side": "buy" if long else "sell", "qty": str(qty), "type": "limit",
@@ -376,7 +381,7 @@ class Tick:
                         body["take_profit"] = {"limit_price": alpaca.fmt_price(tp)}
                 else:
                     body.update(time_in_force="day", extended_hours=True)
-                d = self.submit(body, f"{name} {side}, {self.session}")
+                d = self.submit(body, f"{name}{grade} {side}, {self.session}")
                 if d and float(d.get("filled_qty") or 0) > 0:
                     # Broker stops don't trigger outside regular hours, so every run also checks this one.
                     st.setdefault("mental_stops", {})[sym] = {"stop": round(stop, 2), "side": body["side"]}

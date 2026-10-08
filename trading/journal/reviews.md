@@ -66,3 +66,8 @@
 
 * Alpaca equity $97,869.73 before the open (previous close $99,900.36).
 * Change: risk per trade raised from 2.5% to 4% of equity at equal weights (scaled by each strategy's weight). Position caps (1.0x intraday, 0.6x late and overnight), the 3.5x / 1.8x gross caps, stops and one position per symbol are unchanged.
+
+## 2026-10-08 (07:20 ET, user request: size up on near perfect setups)
+
+* Tested A+ setups on the 38 symbols (1100 days, last 120 out of sample): RSI(2) < 5 and IBS < 0.15 above SMA200: 144 trades in sample, 69% wins, average win +2.71% vs loss -2.85%, profit factor 2.16 (RSI(2) < 10 alone: 1.55); out of sample 26 trades, 92% wins, 14.25. Stricter RSI(2) < 3 and IBS < 0.1 was worse in sample (1.37).
+* Change: rsi2d and ibs entries that are also A+ get double risk (8% of equity) and may use up to 1x equity in one position, beyond the strategy's share, within the combined 1.8x overnight / 3.5x intraday caps. Stops unchanged.
