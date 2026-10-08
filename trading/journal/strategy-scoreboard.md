@@ -1,6 +1,6 @@
 # Strategy scoreboard (PAPER challenge)
 
-Updated 2026-10-08 16:22 ET. Backtest: 400 days of Alpaca bars (1100 for daily strategies), in sample before 2026-06-10, out of sample after (never tuned on). Per trade returns, unlevered, after costs. Live: Alpaca fills since the challenge started.
+Updated 2026-10-08 16:24 ET. Backtest: 400 days of Alpaca bars (1100 for daily strategies), in sample before 2026-06-10, out of sample after (never tuned on). Per trade returns, unlevered, after costs. Live: Alpaca fills since the challenge started.
 
 | Strategy | Period | Trades | Win rate | Avg win / avg loss | Profit (sum of trade returns) | Profit factor | Indicators |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -20,6 +20,8 @@ Updated 2026-10-08 16:22 ET. Backtest: 400 days of Alpaca bars (1100 for daily s
 | rsi2d | backtest out of sample | 104 | 77% | +2.03% / -1.82% | +118.4% | 3.71 | RSI2, SMA200, SMA5, ATR14 (daily bars) |
 | reversal | backtest in sample | 1340 | 52% | +1.28% / -1.23% | +105.5% | 1.13 | 1 day return, ranked across the universe (daily bars) |
 | reversal | backtest out of sample | 166 | 55% | +1.31% / -1.40% | +14.4% | 1.14 | 1 day return, ranked across the universe (daily bars) |
+| bbdip | backtest in sample | 228 | 66% | +2.69% / -2.99% | +170.3% | 1.73 | SMA20, 20 day standard deviation (Bollinger 20, 2), SMA200, ATR14 (daily bars) |
+| bbdip | backtest out of sample | 28 | 79% | +3.21% / -0.28% | +69.0% | 42.02 | SMA20, 20 day standard deviation (Bollinger 20, 2), SMA200, ATR14 (daily bars) |
 | trend | live | 7 | 0% | +0.00% / -0.51% | -3.5% | 0.00 | realized P&L $-1,326 |
 | rsi2 | live | 0 | | | | | realized P&L $0 |
 | orb | live | 0 | | | | | realized P&L $0 |
@@ -28,6 +30,7 @@ Updated 2026-10-08 16:22 ET. Backtest: 400 days of Alpaca bars (1100 for daily s
 | ibs | live | 0 | | | | | realized P&L $0 |
 | rsi2d | live | 0 | | | | | realized P&L $0 |
 | reversal | live | 1 | 0% | +0.00% / -1.47% | -1.5% | 0.00 | realized P&L $-660 |
+| bbdip | live | 0 | | | | | realized P&L $0 |
 | opt | live | 0 | | | | | realized P&L $0 |
 
 Allocation weights now: {'rsi2d': 0.4, 'ibs': 0.35, 'reversal': 0.25}
@@ -42,4 +45,5 @@ Allocation weights now: {'rsi2d': 0.4, 'ibs': 0.35, 'reversal': 0.25}
 * **ibs**: Daily, long only, near the close (about 15:55 ET). Buy when today's IBS is below 0.1 (close in the bottom 10% of the day's range) and the close is above the 200 day simple moving average. Stop 3 x ATR14 (daily) below entry. Sell near the close on the first day the close is above the previous day's high, or after 5 trading days.
 * **rsi2d**: Daily, long only, near the close (about 15:55 ET). Buy when RSI(2) of the daily closes is below 10 and the close is above the 200 day simple moving average. Stop 3 x ATR14 (daily) below entry. Sell near the close on the first day the close is above the 5 day simple moving average, or after 10 trading days.
 * **reversal**: Daily, near the close (about 15:55 ET): buy the 2 stocks or ETFs of the universe with the worst return since yesterday's close. Sell at the next regular open (09:30 to 09:35 ET). Emergency stop 3% below entry.
+* **bbdip**: Daily, long only, near the close (about 15:55 ET). Buy when the close is below the lower Bollinger band (20 day SMA minus 2 x the 20 day standard deviation of closes) and above the 200 day simple moving average. Stop 3 x ATR14 (daily) below entry. Sell near the close on the first day the close is above the previous day's high, or after 5 trading days.
 * **opt**: once a day between 09:35 and 11:00 ET, buy the QQQ call (first 5 minute bar up) or put (down), nearest expiry 1 to 4 days out, strike nearest the money. Exit at minus 50%, plus 100%, or 15:45 ET the day before expiry.
