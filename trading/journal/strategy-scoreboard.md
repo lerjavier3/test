@@ -1,24 +1,36 @@
 # Strategy scoreboard (PAPER challenge)
 
-Updated 2026-10-07 10:59 ET. Backtest: 400 days of Alpaca bars (1100 for daily strategies), in sample before 2026-06-09, out of sample after (never tuned on). Per trade returns, unlevered, after costs. Live: Alpaca fills since the challenge started.
+Updated 2026-10-08 16:22 ET. Backtest: 400 days of Alpaca bars (1100 for daily strategies), in sample before 2026-06-10, out of sample after (never tuned on). Per trade returns, unlevered, after costs. Live: Alpaca fills since the challenge started.
 
 | Strategy | Period | Trades | Win rate | Avg win / avg loss | Profit (sum of trade returns) | Profit factor | Indicators |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| rsi2d | backtest in sample | 582 | 70% | +2.37% / -3.54% | +363.8% | 1.60 | RSI2, SMA200, SMA5, ATR14 (daily bars) |
-| rsi2d | backtest out of sample | 105 | 78% | +2.02% / -2.49% | +108.9% | 2.90 | RSI2, SMA200, SMA5, ATR14 (daily bars) |
-| ibs | backtest in sample | 866 | 64% | +2.61% / -3.03% | +514.6% | 1.55 | IBS = (close - low) / (high - low), SMA200, ATR14 (daily bars) |
-| ibs | backtest out of sample | 176 | 56% | +2.91% / -2.78% | +73.8% | 1.34 | IBS = (close - low) / (high - low), SMA200, ATR14 (daily bars) |
-| trend | live | 6 | 0% | +0.00% / -0.40% | -2.4% | 0.00 | realized P&L $-650 |
+| trend | backtest in sample | 2538 | 26% | +2.82% / -1.33% | -630.6% | 0.75 | EMA20, EMA50, ATR14 (1 hour bars) |
+| trend | backtest out of sample | 1168 | 27% | +2.75% / -1.24% | -205.7% | 0.81 | EMA20, EMA50, ATR14 (1 hour bars) |
+| rsi2 | backtest in sample | 1182 | 53% | +0.52% / -0.98% | -223.1% | 0.59 | RSI2, EMA200, EMA5, ATR14 (1 hour bars) |
+| rsi2 | backtest out of sample | 577 | 50% | +0.49% / -0.85% | -106.1% | 0.57 | RSI2, EMA200, EMA5, ATR14 (1 hour bars) |
+| orb | backtest in sample | 527 | 51% | +0.78% / -0.81% | +0.9% | 1.00 | 30 minute opening range (5 minute bars) |
+| orb | backtest out of sample | 218 | 43% | +0.78% / -0.69% | -11.6% | 0.86 | 30 minute opening range (5 minute bars) |
+| breakout | backtest in sample | 276 | 28% | +4.47% / -1.51% | +44.2% | 1.15 | 50 bar high, EMA200, EMA50, ATR14 (1 hour bars) |
+| breakout | backtest out of sample | 128 | 31% | +3.16% / -1.46% | -2.4% | 0.98 | 50 bar high, EMA200, EMA50, ATR14 (1 hour bars) |
+| overnight | backtest in sample | 1159 | 48% | +1.01% / -0.85% | +56.6% | 1.11 | SMA20 (daily bars) |
+| overnight | backtest out of sample | 508 | 49% | +0.99% / -0.97% | -6.9% | 0.97 | SMA20 (daily bars) |
+| ibs | backtest in sample | 862 | 65% | +2.61% / -3.00% | +544.3% | 1.60 | IBS = (close - low) / (high - low), SMA200, ATR14 (daily bars) |
+| ibs | backtest out of sample | 177 | 56% | +2.89% / -2.90% | +65.6% | 1.29 | IBS = (close - low) / (high - low), SMA200, ATR14 (daily bars) |
+| rsi2d | backtest in sample | 584 | 70% | +2.37% / -3.63% | +347.5% | 1.55 | RSI2, SMA200, SMA5, ATR14 (daily bars) |
+| rsi2d | backtest out of sample | 104 | 77% | +2.03% / -1.82% | +118.4% | 3.71 | RSI2, SMA200, SMA5, ATR14 (daily bars) |
+| reversal | backtest in sample | 1340 | 52% | +1.28% / -1.23% | +105.5% | 1.13 | 1 day return, ranked across the universe (daily bars) |
+| reversal | backtest out of sample | 166 | 55% | +1.31% / -1.40% | +14.4% | 1.14 | 1 day return, ranked across the universe (daily bars) |
+| trend | live | 7 | 0% | +0.00% / -0.51% | -3.5% | 0.00 | realized P&L $-1,326 |
 | rsi2 | live | 0 | | | | | realized P&L $0 |
 | orb | live | 0 | | | | | realized P&L $0 |
 | breakout | live | 2 | 0% | +0.00% / -0.94% | -1.9% | 0.00 | realized P&L $-1,162 |
 | overnight | live | 4 | 0% | +0.00% / -0.76% | -3.1% | 0.00 | realized P&L $-266 |
 | ibs | live | 0 | | | | | realized P&L $0 |
 | rsi2d | live | 0 | | | | | realized P&L $0 |
-| reversal | live | 0 | | | | | realized P&L $0 |
+| reversal | live | 1 | 0% | +0.00% / -1.47% | -1.5% | 0.00 | realized P&L $-660 |
 | opt | live | 0 | | | | | realized P&L $0 |
 
-Allocation weights now: {'ibs': 0.6, 'reversal': 0.4}
+Allocation weights now: {'rsi2d': 0.4, 'ibs': 0.35, 'reversal': 0.25}
 
 ## Rules
 
