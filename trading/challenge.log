@@ -335,3 +335,10 @@ max minutes reached, exiting for restart
 [10-08 08:58] 08:58 ET pre: equity 97,793, peak 102,073, max dd 4.33%, lev 1.58x, progress -1%, positions 4
 max minutes reached, exiting for restart
 [10-08 09:03] 09:03 ET pre: equity 97,820, peak 102,073, max dd 4.33%, lev 1.58x, progress -1%, positions 4
+[10-08 09:18] 09:18 ET pre: equity 98,168, peak 102,073, max dd 4.33%, lev 1.58x, progress -0%, positions 4
+[10-08 09:33] 09:33 ET regular: equity 97,659, peak 102,073, max dd 4.33%, lev 1.58x, progress -1%, positions 3 | filled 252 @ 175.01: sell 252 COIN market (close: reversal: sell at the open) [ch-reversal-COIN-202610080933-1]
+[10-08 09:38] 09:38 ET regular: equity 97,473, peak 102,073, max dd 4.51%, lev 1.13x, progress -1%, positions 3
+[10-08 09:43] 09:43 ET regular: equity 97,371, peak 102,073, max dd 4.61%, lev 1.13x, progress -1%, positions 3
+[10-08 09:48] 09:48 ET regular: equity 97,047, peak 102,073, max dd 4.92%, lev 1.13x, progress -1%, positions 3
+[10-08 09:53] 09:53 ET regular: equity 96,986, peak 102,073, max dd 4.98%, lev 1.13x, progress -1%, positions 3
+[10-08 09:58] 09:58 ET regular: equity 96,907, peak 102,073, max dd 5.06%, lev 1.13x, progress -1%, positions 3
