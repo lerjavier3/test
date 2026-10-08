@@ -37,6 +37,7 @@ MAX_PER_STRATEGY = 6
 OPEN_STATUSES = ("new", "accepted", "held", "partially_filled", "pending_new", "accepted_for_bidding")
 EARNINGS = os.path.join(ch.ROOT, "trading", "earnings.json")
 APLUS_POS_CAP = 1.0         # A+ setups may use up to 1x equity in one position (gross caps still apply)
+APLUS_RISK = 0.10            # equity risked on an A+ setup (user allowed up to 10%)
 COOLDOWN_MIN = 60           # no re-entry in a symbol for an hour after closing it
 POS_CAP_REGULAR = 1.0       # max value of one stock position / equity, regular session
 POS_CAP_OVERNIGHT = 0.6     # same, after 15:40 ET and outside regular hours
@@ -364,8 +365,8 @@ class Tick:
                     continue
                 room = min(cap - gross, w * cap - s_gross, 0.95 * bp)
                 size_cap, size_risk, grade = pos_cap, risk, ""
-                if name in ("rsi2d", "ibs") and S.aplus(bars):  # A+ setup: double risk, up to 1x equity
-                    size_cap, size_risk, grade = max(pos_cap, APLUS_POS_CAP * self.equity), 2 * risk, " A+"
+                if name in ("rsi2d", "ibs") and S.aplus(bars):  # A+ setup: 10% risk, up to 1x equity
+                    size_cap, size_risk, grade = max(pos_cap, APLUS_POS_CAP * self.equity), APLUS_RISK * self.equity, " A+"
                     room = min(cap - gross, 0.95 * bp)  # may use free capacity beyond the strategy's share
                 if name == "reversal":  # split the strategy's share across its k picks
                     room = min(room, w * cap / strat.k)

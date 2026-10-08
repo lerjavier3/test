@@ -71,3 +71,7 @@
 
 * Tested A+ setups on the 38 symbols (1100 days, last 120 out of sample): RSI(2) < 5 and IBS < 0.15 above SMA200: 144 trades in sample, 69% wins, average win +2.71% vs loss -2.85%, profit factor 2.16 (RSI(2) < 10 alone: 1.55); out of sample 26 trades, 92% wins, 14.25. Stricter RSI(2) < 3 and IBS < 0.1 was worse in sample (1.37).
 * Change: rsi2d and ibs entries that are also A+ get double risk (8% of equity) and may use up to 1x equity in one position, beyond the strategy's share, within the combined 1.8x overnight / 3.5x intraday caps. Stops unchanged.
+
+## 2026-10-08 (07:35 ET, user request: risk up to 10% on the best setups)
+
+* Change: A+ setups (RSI(2) < 5 and IBS < 0.15, above SMA200) now risk 10% of equity (was 8%), up to 1x equity in one position. Normal setups stay at 4%. Combined caps and stops unchanged. The search for new setups continues in every daily review.
