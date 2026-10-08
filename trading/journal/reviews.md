@@ -61,3 +61,8 @@
 * Alpaca equity $99,861.92 (previous close $99,975.90): day -$113.98 (-0.1%), total -0.1%. Open: AVGO 164 (trend, from 2026-10-06), QCOM 133 (rsi2d), META 37 (ibs), COIN 252 (reversal), all entered 15:52 ET.
 * Fixed: the reversal strategy bought only 1 of its 2 picks because the first used its whole capital share; each pick now gets half of the share.
 * Tested on the 38 symbols (1100 days, last 120 out of sample): RSI(2) < 10 exiting at RSI(2) > 70: 1.56 / 3.29; Williams %R(2) oversold: 1.47 / 1.78; close below the 5 day low: 1.43 / 2.05. All profitable out of sample, none beats the live rsi2d in sample (1.60). No weight change.
+
+## 2026-10-08 (07:00 ET, user request: be bolder)
+
+* Alpaca equity $97,869.73 before the open (previous close $99,900.36).
+* Change: risk per trade raised from 2.5% to 4% of equity at equal weights (scaled by each strategy's weight). Position caps (1.0x intraday, 0.6x late and overnight), the 3.5x / 1.8x gross caps, stops and one position per symbol are unchanged.

@@ -28,7 +28,7 @@ import challenge as ch  # noqa: E402
 import strategies as S  # noqa: E402
 
 API, DATA, ET = ch.API, ch.DATA, ch.ET
-RISK = 0.025                # equity risked per trade at equal weights (scaled by the strategy's weight)
+RISK = 0.04                 # equity risked per trade at equal weights (scaled by the strategy's weight); 0.025 before 2026-10-08
 GROSS_REGULAR = 3.5         # max gross exposure / equity in the regular session
 GROSS_OVERNIGHT = 1.9       # held through the close and outside regular hours
 GROSS_OVERNIGHT_ENTRY = 1.8 # new entries after 15:40 ET and outside regular hours stop here
