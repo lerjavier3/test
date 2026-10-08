@@ -11,10 +11,10 @@
   "challenge_active": true,
   "options_level": 3,
   "peak_equity": 102073.19,
-  "trough_equity": 98014.18,
-  "max_drawdown_pct": 3.98,
-  "last_equity": 98014.18,
-  "last_run_et": "2026-10-08T06:56-04:00",
+  "trough_equity": 97696.65,
+  "max_drawdown_pct": 4.29,
+  "last_equity": 97696.65,
+  "last_run_et": "2026-10-08T07:06-04:00",
   "mental_stops": {
     "AVGO": {
       "stop": 361.49,
@@ -329,6 +329,7 @@
     1.58,
     1.58,
     1.57,
+    1.58,
     1.58,
     1.58,
     1.58,
