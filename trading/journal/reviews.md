@@ -85,3 +85,8 @@
   * Cross-sectional reversal limited to symbols above SMA200: k2 PF 1.19 / 1.08, no better than the live reversal.
 * Change: promoted `bbdip` (Bollinger 20, 2 dip above SMA200, IBS style exit, stop 3 ATR). Official backtest with stops: 228 trades in sample, 66% wins, PF 1.73; 28 trades out of sample, 79% wins, avg +3.21% vs −0.28%, PF 42. It beats ibs (1.60 / 1.29) and reversal (1.13 / 1.14) in both periods. Weights now rsi2d 0.4, bbdip 0.3, ibs 0.3, reversal 0 (it still sells ORCL and INTC at the next open). A+ sizing now also applies to bbdip signals. Tests pass.
 * Earnings: nothing within 7 days for held or universe stocks.
+
+## 2026-10-09 (07:30 ET, user request: increase leverage)
+
+* Alpaca equity $98,613. Broker limits: 4x intraday, 2x Reg T overnight (regt_buying_power $21,728 left at 1.78x).
+* Change: overnight gross cap 1.9x to 1.97x, late and overnight entries up to 1.95x (was 1.8x), one position overnight up to 0.8x equity (was 0.6x). Intraday cap stays 3.5x; all daily strategies hold overnight, so the 2x broker limit is the real ceiling. Tests pass.

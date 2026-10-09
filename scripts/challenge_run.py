@@ -30,8 +30,8 @@ import strategies as S  # noqa: E402
 API, DATA, ET = ch.API, ch.DATA, ch.ET
 RISK = 0.04                 # equity risked per trade at equal weights (scaled by the strategy's weight); 0.025 before 2026-10-08
 GROSS_REGULAR = 3.5         # max gross exposure / equity in the regular session
-GROSS_OVERNIGHT = 1.9       # held through the close and outside regular hours
-GROSS_OVERNIGHT_ENTRY = 1.8 # new entries after 15:40 ET and outside regular hours stop here
+GROSS_OVERNIGHT = 1.97      # held through the close and outside regular hours
+GROSS_OVERNIGHT_ENTRY = 1.95 # new entries after 15:40 ET and outside regular hours stop here
 MAX_POSITIONS = 12          # all strategies combined
 MAX_PER_STRATEGY = 6
 OPEN_STATUSES = ("new", "accepted", "held", "partially_filled", "pending_new", "accepted_for_bidding")
@@ -40,7 +40,7 @@ APLUS_POS_CAP = 1.0         # A+ setups may use up to 1x equity in one position 
 APLUS_RISK = 0.10            # equity risked on an A+ setup (user allowed up to 10%)
 COOLDOWN_MIN = 60           # no re-entry in a symbol for an hour after closing it
 POS_CAP_REGULAR = 1.0       # max value of one stock position / equity, regular session
-POS_CAP_OVERNIGHT = 0.6     # same, after 15:40 ET and outside regular hours
+POS_CAP_OVERNIGHT = 0.8     # same, after 15:40 ET and outside regular hours
 OPTION_BUDGET = 0.08        # premium per options trade, share of equity
 MAX_ERRORS = 5              # consecutive failed ticks before the loop exits
 

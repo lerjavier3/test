@@ -50,8 +50,8 @@ Universe excludes JPM, BAC, UNH, NFLX, PEP, KO, XOM, CVX (earnings may fall befo
 | --- | --- |
 | Normal risk per trade | 4% of equity at equal weights, scaled by the strategy's weight × number of strategies (half outside regular hours) |
 | **A+ setup** (`rsi2d`, `bbdip` or `ibs` signal that also has RSI(2) < 5 and IBS < 0.15) | **10% of equity at risk**, up to 1x equity in one position, may use free capacity beyond its strategy's share. Backtest PF 2.16 in sample, 92% wins out of sample |
-| One position cap | 1.0x equity intraday, 0.6x after 15:40 ET and outside regular hours (A+ up to 1.0x) |
-| Gross exposure | 3.5x intraday; new entries after 15:40 ET stop at 1.8x; trim to 1.9x from 15:45 ET and outside regular hours |
+| One position cap | 1.0x equity intraday, 0.8x after 15:40 ET and outside regular hours (A+ up to 1.0x) |
+| Gross exposure | 3.5x intraday; new entries after 15:40 ET stop at 1.95x; trim to 1.97x from 15:45 ET and outside regular hours |
 | Positions | at most 6 per strategy, 12 total, one per symbol |
 | Cooldown | 60 minutes before re-entering a symbol after any close |
 | Crypto | cash only, long only, broker stop_limit |
@@ -98,3 +98,4 @@ Paper only guard (refuses unless the paper endpoint, `ALPACA_PAPER` not false, `
 * 2026-10-07: wider search; IBS and reversal promoted; universe widened to 38 symbols; daily RSI(2) added; reversal capital split fixed.
 * 2026-10-08: risk per trade raised to 4%; A+ setups get 10% risk and up to 1x equity. Equity before the open: $97,869.73 (−2.1% since start).
 * 2026-10-08 review: `bbdip` promoted, `reversal` set to weight 0. Equity $96,885.
+* 2026-10-09: user asked for more leverage; overnight caps raised to 1.95x entry / 1.97x hold, 0.8x per position.
