@@ -90,3 +90,11 @@
 
 * Alpaca equity $98,613. Broker limits: 4x intraday, 2x Reg T overnight (regt_buying_power $21,728 left at 1.78x).
 * Change: overnight gross cap 1.9x to 1.97x, late and overnight entries up to 1.95x (was 1.8x), one position overnight up to 0.8x equity (was 0.6x). Intraday cap stays 3.5x; all daily strategies hold overnight, so the 2x broker limit is the real ceiling. Tests pass.
+
+## 2026-10-09 (daily review, 16:35 ET)
+
+* Alpaca equity $97,002 (−3.0% since start, +$381 today). Reversal's last two trades closed at the open: ORCL +$856, INTC +$97. Near the close: rsi2d A+ bought 510 INTC at $104.37 (stop $86.76, about 9% of equity at risk) and 10 AMD; SMH, NVDA, META, QCOM still held. 6 positions, 1.95x.
+* Earnings: INTC reports 2026-10-29 and AMD 2026-11-03 (company press releases), both after the challenge; added to `trading/earnings.json`.
+* Scoreboard (in sample / last 120 days): rsi2d PF 1.54 / 3.42, bbdip 1.84 / 38.8, ibs 1.59 / 1.25.
+* Tested: new n day high, hold 5 or 10 days (best 20 day high hold 10: PF 1.78 in sample but 1.18 out of sample, 252 day high 0.44 out of sample: rejected). Turn of month on SPY, QQQ, IWM (PF 1.05 to 1.24 in sample, only 12 out of sample trades, next window after the challenge: rejected). Crypto trend above SMA50/20/10 (PF 1.91 / 7.65 for SMA50 but only 9 recent trades and a 23% win rate: still a candidate, not live).
+* No change: nothing beat the live three in both periods.

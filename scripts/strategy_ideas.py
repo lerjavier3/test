@@ -236,7 +236,41 @@ def xs_reversal_trend(k):
     return f"xs reversal above sma200 k{k} wide", "1Day", S.WIDE, 1100, run
 
 
+def high_breakout(n, hold):
+    """Daily, WIDE: close at a new n day high -> buy at the close; sell at the close hold days later."""
+    def run(d):
+        out = []
+        for s, bars in d.items():
+            c, i = [b["c"] for b in bars], n
+            while i < len(bars) - hold:
+                if c[i] >= max(c[i - n:i + 1]):
+                    out.append(trade(s, bars[i + 1]["t"], "long", c[i], c[i + hold]))
+                    i += hold
+                i += 1
+        return out
+    return f"new {n} day high hold {hold} wide", "1Day", S.WIDE, 1100, run
+
+
+def turn_of_month(before, after):
+    """Daily ETFs: buy at the close `before` trading days before month end; sell at the close of trading day `after`."""
+    def run(d):
+        out = []
+        for s, bars in d.items():
+            months = {}
+            for i, b in enumerate(bars):
+                months.setdefault(b["t"][:7], []).append(i)
+            keys = sorted(months)
+            for m, nxt in zip(keys, keys[1:]):
+                if len(months[m]) > before and len(months[nxt]) >= after:
+                    i, j = months[m][-before - 1], months[nxt][after - 1]
+                    out.append(trade(s, bars[i + 1]["t"], "long", bars[i]["c"], bars[j]["c"]))
+        return out
+    return f"turn of month -{before}/+{after} etf", "1Day", ETF3, 1100, run
+
+
 FAMILIES = {
+    "highs": [high_breakout(n, h) for n, h in itertools.product((20, 50, 252), (5, 10))],
+    "tom": [turn_of_month(b, a) for b, a in itertools.product((1, 3, 4), (1, 3))],
     "streak": [down_streak(n) for n in (3, 4, 5)],
     "bollinger": [bollinger_dip(k) for k in (1.5, 2.0, 2.5)],
     "revtrend": [xs_reversal_trend(k) for k in (1, 2, 3)],
