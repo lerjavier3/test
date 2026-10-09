@@ -578,3 +578,9 @@ max minutes reached, exiting for restart
 [10-09 15:27] 15:27 ET regular: equity 97,048, peak 102,073, max dd 6.24%, lev 1.34x, progress -1%, positions 4
 [10-09 15:32] 15:32 ET regular: equity 96,956, peak 102,073, max dd 6.24%, lev 1.34x, progress -1%, positions 4
 [10-09 15:37] 15:37 ET regular: equity 96,807, peak 102,073, max dd 6.24%, lev 1.34x, progress -1%, positions 4
+[10-09 15:42] 15:42 ET regular: equity 96,808, peak 102,073, max dd 6.24%, lev 1.34x, progress -1%, positions 4
+[10-09 15:47] 15:47 ET regular: equity 96,887, peak 102,073, max dd 6.24%, lev 1.34x, progress -1%, positions 4
+[10-09 15:52] 15:52 ET regular: equity 96,884, peak 102,073, max dd 6.24%, lev 1.34x, progress -1%, positions 4 | filled 10 @ 607.478: buy 10 AMD limit @608.51 stop 536.45 (rsi2d long, regular) [ch-rsi2d-AMD-202610091552-1] | filled 510 @ 104.37: buy 510 INTC limit @104.59 stop 86.76 (rsi2d A+ long, regular) [ch-rsi2d-INTC-202610091552-2]
+[10-09 15:58] 15:58 ET regular: equity 97,050, peak 102,073, max dd 6.24%, lev 1.95x, progress -1%, positions 6
+[10-09 16:03] 16:03 ET post: equity 97,027, peak 102,073, max dd 6.24%, lev 1.95x, progress -1%, positions 6
+[10-09 16:18] 16:18 ET post: equity 96,979, peak 102,073, max dd 6.24%, lev 1.95x, progress -1%, positions 6

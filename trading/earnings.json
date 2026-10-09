@@ -1,10 +1,12 @@
 {
-  "_source": "Expected dates from a web search on 2026-10-06 (cnbc.com, days.to, siliconanalysts.com); not all confirmed. The daily review rechecks them. AMD and AVGO were not listed; both usually report after 2026-10-20. 2026-10-07: JPM, BAC, UNH, NFLX, PEP, KO, XOM and CVX may report before 2026-10-20 or have unclear dates (earningswhispers.com, financhle.com search results conflicted), so they are excluded from the universe instead. V, MA, LLY, INTC, COIN, UBER, BRK.B usually report late October or November; COST, WMT, HD, CRM, ORCL, ADBE, QCOM, MU, PLTR report in November or December.",
+  "_source": "Expected dates from a web search on 2026-10-06 (cnbc.com, days.to, siliconanalysts.com); not all confirmed. The daily review rechecks them. AMD and AVGO were not listed; both usually report after 2026-10-20. 2026-10-07: JPM, BAC, UNH, NFLX, PEP, KO, XOM and CVX may report before 2026-10-20 or have unclear dates (earningswhispers.com, financhle.com search results conflicted), so they are excluded from the universe instead. V, MA, LLY, INTC, COIN, UBER, BRK.B usually report late October or November; COST, WMT, HD, CRM, ORCL, ADBE, QCOM, MU, PLTR report in November or December. 2026-10-09: INTC 2026-10-29 (intc.com press release) and AMD 2026-11-03 (ir.amd.com press release), both confirmed.",
   "TSLA": "2026-10-21",
   "GOOGL": "2026-10-28",
   "META": "2026-10-28",
   "MSFT": "2026-10-28",
   "AMZN": "2026-10-29",
   "AAPL": "2026-10-29",
-  "NVDA": "2026-11-18"
+  "NVDA": "2026-11-18",
+  "INTC": "2026-10-29",
+  "AMD": "2026-11-03"
 }
