@@ -98,3 +98,11 @@
 * Scoreboard (in sample / last 120 days): rsi2d PF 1.54 / 3.42, bbdip 1.84 / 38.8, ibs 1.59 / 1.25.
 * Tested: new n day high, hold 5 or 10 days (best 20 day high hold 10: PF 1.78 in sample but 1.18 out of sample, 252 day high 0.44 out of sample: rejected). Turn of month on SPY, QQQ, IWM (PF 1.05 to 1.24 in sample, only 12 out of sample trades, next window after the challenge: rejected). Crypto trend above SMA50/20/10 (PF 1.91 / 7.65 for SMA50 but only 9 recent trades and a 23% win rate: still a candidate, not live).
 * No change: nothing beat the live three in both periods.
+
+## 2026-10-10 (weekend research, user asked about meme coins)
+
+* Alpaca lists DOGE, SHIB, PEPE, BONK, WIF and TRUMP (USD pairs); crypto is cash only and long only.
+* Tested on daily bars (DOGE and SHIB 1100 days, PEPE and TRUMP about 620, BONK and WIF about 235), in sample vs last 120 days:
+  * Trend above SMA10/20/50: PF 1.02 to 1.31 in sample, 1.33 to 1.52 out of sample, but only 17% to 42% wins (a few huge winners carry it).
+  * Buy after a 10% down day, sell next close: PF 1.44 in sample, 0.81 out of sample (7 trades). 15% drop: 15 trades in sample, none out of sample.
+* No change: the meme trend works only through rare big winners with a low win rate, needs real cash (the stock book is at 1.95x on margin), and is weaker than the live stock strategies. Kept as a candidate.
