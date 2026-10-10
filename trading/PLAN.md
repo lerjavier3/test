@@ -73,7 +73,7 @@ Paper only guard (refuses unless the paper endpoint, `ALPACA_PAPER` not false, `
 
 * **Check ins:** self chaining `send_later` into this session with the message in `trading/RUNNER.md` → "Check in": every 60 minutes 08:00 to 17:00 ET on weekdays, every 240 minutes otherwise. Each one: confirm the bot runs (restart if not), push, schedule the next, reply "ok". Stop scheduling after the challenge ends or after the loop fails on 2 check ins in a row (log why).
 * **Daily review:** the first check in after 16:00 ET on a weekday when `trading/journal/reviews.md` has no entry for today. Run `python3 scripts/strategy_backtest.py` (refreshes `trading/journal/strategy-scoreboard.md`), test at least one new batch of ideas (`scripts/strategy_search.py`, `scripts/strategy_ideas.py` or inline), adjust weights or promote a strategy only if it wins in sample and out of sample, fix real bugs only, update `trading/PLAYBOOK.md` when a strategy qualifies, recheck earnings dates within 7 days, run tests, restart, log in `reviews.md`, push.
-* **Mini daily P&L report:** Routine "Daily P&L report" `trig_01Phf3qgZKsGRCrbriVpr7ju`, cron `CRON_TZ=Asia/Singapore 58 21 * * *`, fires into this session; reply 2 lines with Alpaca numbers; it disables itself after the challenge.
+* **Mini daily P&L report:** Routine "Daily P&L report" `trig_01Phf3qgZKsGRCrbriVpr7ju`, cron `CRON_TZ=Asia/Singapore 58 21 * * *`, fires into this session; reply 2 lines with Alpaca numbers; it disables itself after the challenge. **Weekend rule (user, 2026-10-10):** on Saturday, Sunday and Monday SGT, send the report only if trades were filled since the last report (for example weekend crypto); if none, reply with nothing user facing (just "ok").
 
 ## 8. End of challenge (automatic in the bot)
 
