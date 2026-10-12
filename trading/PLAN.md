@@ -101,3 +101,4 @@ Paper only guard (refuses unless the paper endpoint, `ALPACA_PAPER` not false, `
 * 2026-10-09: user asked for more leverage; overnight caps raised to 1.95x entry / 1.97x hold, 0.8x per position.
 
 * **Exit tools (user, 2026-10-12):** every trade must have a real broker exit that limits the loss, but pick the type per situation: fixed stop loss, trailing stop, take profit levels (OCO), or a mix. Example: bounce trades suit a fixed stop plus take profit; strong trends suit a trailing stop.
+* **Research queue (user, 2026-10-12), test from the 14 Oct review:** double bottom breakout, 50/200 SMA golden cross, liquidity sweep reversal (undercut prior swing low then close back above), demand zone + bullish engulfing confirmation, higher high / higher low pullback, weekly tight box breakout above the 20 week SMA. Same rules: 1+ year, in sample vs last 120 days.
