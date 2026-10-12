@@ -630,11 +630,11 @@ def main():
         code, t, lines = tick(a.dry_run)
         print("\n".join(lines[:10]))
         sys.exit(code)
-    errors, last_push, started = 0, 0.0, time.time()
+    errors, started = 0, time.time()
     while True:
         if a.max_minutes and time.time() - started > a.max_minutes * 60:
-            push()
             print("max minutes reached, exiting for restart", flush=True)
+            push()
             sys.exit(0)
         session = "closed"
         try:
@@ -643,8 +643,8 @@ def main():
             errors = 0
             print(f"[{t.now:%m-%d %H:%M}] " + " | ".join(lines), flush=True)
             if not t.state.get("challenge_active", True):
-                push()
                 print("challenge over, summary written, exiting", flush=True)
+                push()
                 sys.exit(0)
         except SystemExit as e:
             if e.code == 2:
@@ -659,8 +659,8 @@ def main():
             ch.log_error(f"challenge_run loop stopped after {errors} failed ticks in a row")
             push()
             sys.exit(3)
-        if not a.dry_run and time.time() - last_push > 3300:
-            last_push = time.time() if push() else last_push
+        if not a.dry_run:  # push every tick so the tree stays clean between ticks
+            push()
         nap = sleep_for(session)
         if a.max_minutes:  # never sleep past the exit time (the background task is killed at 2 h)
             nap = max(5, min(nap, a.max_minutes * 60 - (time.time() - started)))
