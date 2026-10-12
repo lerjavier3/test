@@ -100,4 +100,4 @@ Paper only guard (refuses unless the paper endpoint, `ALPACA_PAPER` not false, `
 * 2026-10-08 review: `bbdip` promoted, `reversal` set to weight 0. Equity $96,885.
 * 2026-10-09: user asked for more leverage; overnight caps raised to 1.95x entry / 1.97x hold, 0.8x per position.
 
-* **Stop rule (user, 2026-10-12):** every trade keeps a fixed stop loss order at the broker (not only a trailing stop). Take profit levels may be added on top.
+* **Exit tools (user, 2026-10-12):** every trade must have a real broker exit that limits the loss, but pick the type per situation: fixed stop loss, trailing stop, take profit levels (OCO), or a mix. Example: bounce trades suit a fixed stop plus take profit; strong trends suit a trailing stop.
