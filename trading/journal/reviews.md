@@ -115,3 +115,4 @@
 ## 2026-10-12 (13:10 ET, user: stops too loose for the 2 day hold)
 
 * Replaced the 6 fixed broker stops (5% to 14% away, about $18,000 total risk) with GTC 5% trailing stops that rise with the price and lock in gains. Total risk now about $5,000. The bot counts trailing_stop as a broker stop. New entries keep their tested 3 ATR stop.
+* Widened to 8% trailing at the user's request, so normal swings do not stop out winners early; total risk about $8,000.
