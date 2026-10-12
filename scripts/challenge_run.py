@@ -262,7 +262,7 @@ class Tick:
         """Every stock position gets a real GTC stop order at the broker, on top of the bot's own check."""
         stops = self.state.get("mental_stops", {})
         owners = self.state.get("owners", {})
-        has_stop = {o["symbol"] for o in self.orders if o.get("type") in ("stop", "stop_limit", "trailing_stop")}
+        has_stop = {o["symbol"] for o in self.orders if o.get("type") in ("stop", "stop_limit", "trailing_stop") or o.get("order_class") == "oco"}
         for p in self.positions:
             sym = p["symbol"]
             if sym in self.closed or p["asset_class"] != "us_equity" or sym in has_stop:

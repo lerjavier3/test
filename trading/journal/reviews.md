@@ -116,3 +116,4 @@
 
 * Replaced the 6 fixed broker stops (5% to 14% away, about $18,000 total risk) with GTC 5% trailing stops that rise with the price and lock in gains. Total risk now about $5,000. The bot counts trailing_stop as a broker stop. New entries keep their tested 3 ATR stop.
 * Widened to 8% trailing at the user's request, so normal swings do not stop out winners early; total risk about $8,000.
+* Final setup for the hold until 14 Oct 10:00 SGT (user request): each position split in 5 parts with OCO orders, take profit +3/+6/+10/+15/+20%, one stop loss −8% for all parts. Bot paused, hourly check ins cancelled to save tokens.
