@@ -21,6 +21,8 @@ ORB_UNIVERSE = ["QQQ", "SPY", "NVDA", "TSLA", "AMD"]
 WIDE = STOCKS + ["DIA", "SMH", "XLK", "XLF", "XLE", "XLV", "XLY", "XLI", "XLP", "XLU", "V", "MA", "LLY", "COST",
                  "WMT", "HD", "CRM", "ORCL", "ADBE", "INTC", "QCOM", "MU", "PLTR", "COIN", "UBER", "BRK.B"]
 
+SEMIS = {"NVDA", "AMD", "AVGO", "QCOM", "INTC", "MU", "SMH", "TSM", "ARM", "MRVL"}
+
 
 def ema(xs, n):
     k, out, e = 2 / (n + 1), [], None

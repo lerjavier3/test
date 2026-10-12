@@ -106,3 +106,8 @@
   * Trend above SMA10/20/50: PF 1.02 to 1.31 in sample, 1.33 to 1.52 out of sample, but only 17% to 42% wins (a few huge winners carry it).
   * Buy after a 10% down day, sell next close: PF 1.44 in sample, 0.81 out of sample (7 trades). 15% drop: 15 trades in sample, none out of sample.
 * No change: the meme trend works only through rare big winners with a low win rate, needs real cash (the stock book is at 1.95x on margin), and is weaker than the live stock strategies. Kept as a candidate.
+
+## 2026-10-12 (12:30 ET, user: not profitable, fix it)
+
+* Alpaca equity $94,829 (−5.2%). Cause found: 5 of 6 positions are semiconductors (INTC, SMH, NVDA, QCOM, AMD) at 1.97x, so one sector drop hit the whole book (−$3,580 unrealized on them, META +$915).
+* Change: at most 2 semiconductor names held at once (`MAX_SEMIS`, `S.SEMIS`). Existing positions keep their stops and exits; no forced selling. Tests pass.

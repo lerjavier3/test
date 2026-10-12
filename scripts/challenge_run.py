@@ -34,6 +34,7 @@ GROSS_OVERNIGHT = 1.97      # held through the close and outside regular hours
 GROSS_OVERNIGHT_ENTRY = 1.95 # new entries after 15:40 ET and outside regular hours stop here
 MAX_POSITIONS = 12          # all strategies combined
 MAX_PER_STRATEGY = 6
+MAX_SEMIS = 2               # semiconductor names held at once (added 2026-10-12: 5 of 6 were semis)
 OPEN_STATUSES = ("new", "accepted", "held", "partially_filled", "pending_new", "accepted_for_bidding")
 EARNINGS = os.path.join(ch.ROOT, "trading", "earnings.json")
 APLUS_POS_CAP = 1.0         # A+ setups may use up to 1x equity in one position (gross caps still apply)
@@ -328,6 +329,8 @@ class Tick:
                     continue
                 if sym in held or sym in working or sym.replace("/", "") in working:
                     continue  # one position per symbol: no doubling down, no opposite positions
+                if sym in S.SEMIS and sum(h in S.SEMIS for h in held) >= MAX_SEMIS:
+                    continue  # semiconductors move together: cap the correlated bet
                 if cool.get(sym, "") > self.now.isoformat():
                     continue  # no re-entry right after a close (no revenge trading)
                 crypto = "/" in sym
