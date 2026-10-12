@@ -111,3 +111,7 @@
 
 * Alpaca equity $94,829 (−5.2%). Cause found: 5 of 6 positions are semiconductors (INTC, SMH, NVDA, QCOM, AMD) at 1.97x, so one sector drop hit the whole book (−$3,580 unrealized on them, META +$915).
 * Change: at most 2 semiconductor names held at once (`MAX_SEMIS`, `S.SEMIS`). Existing positions keep their stops and exits; no forced selling. Tests pass.
+
+## 2026-10-12 (13:10 ET, user: stops too loose for the 2 day hold)
+
+* Replaced the 6 fixed broker stops (5% to 14% away, about $18,000 total risk) with GTC 5% trailing stops that rise with the price and lock in gains. Total risk now about $5,000. The bot counts trailing_stop as a broker stop. New entries keep their tested 3 ATR stop.
