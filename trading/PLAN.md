@@ -99,3 +99,5 @@ Paper only guard (refuses unless the paper endpoint, `ALPACA_PAPER` not false, `
 * 2026-10-08: risk per trade raised to 4%; A+ setups get 10% risk and up to 1x equity. Equity before the open: $97,869.73 (−2.1% since start).
 * 2026-10-08 review: `bbdip` promoted, `reversal` set to weight 0. Equity $96,885.
 * 2026-10-09: user asked for more leverage; overnight caps raised to 1.95x entry / 1.97x hold, 0.8x per position.
+
+* **Stop rule (user, 2026-10-12):** every trade keeps a fixed stop loss order at the broker (not only a trailing stop). Take profit levels may be added on top.
