@@ -978,3 +978,4 @@ max minutes reached, exiting for restart
 [10-14 15:39] 15:39 ET regular: equity 90,059, peak 102,073, max dd 12.48%, lev 1.91x, progress -2%, positions 6
 [10-14 15:44] 15:44 ET regular: equity 90,334, peak 102,073, max dd 12.48%, lev 1.91x, progress -2%, positions 6
 [10-14 15:49] 15:49 ET regular: equity 90,206, peak 102,073, max dd 12.48%, lev 1.91x, progress -2%, positions 6
+[10-14 15:54] 15:54 ET regular: equity 90,428, peak 102,073, max dd 12.48%, lev 1.91x, progress -2%, positions 5 | filled 30 @ 739.03: sell 30 META market (close: ibs: 5 day time stop) [ch-ibs-META-202610141554-1] | filled 101 @ 200.62: buy 101 PLTR limit @200.96 stop 180.40 (ibs long, regular) [ch-ibs-PLTR-202610141554-2]
