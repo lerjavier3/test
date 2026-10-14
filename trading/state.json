@@ -13,8 +13,8 @@
   "peak_equity": 102073.19,
   "trough_equity": 94004.53,
   "max_drawdown_pct": 7.9,
-  "last_equity": 94987.7,
-  "last_run_et": "2026-10-12T13:06-04:00",
+  "last_equity": 97587.33,
+  "last_run_et": "2026-10-13T22:01-04:00",
   "mental_stops": {
     "AVGO": {
       "stop": 361.49,
@@ -819,7 +819,8 @@
     1.97,
     1.97,
     1.97,
-    1.97
+    1.97,
+    1.84
   ],
   "last_options_day": "2026-10-06",
   "weights": {
@@ -881,7 +882,7 @@
     "ORCL": "2026-10-09T10:41:18.485946-04:00"
   },
   "orb_done": {
-    "2026-10-12": []
+    "2026-10-13": []
   },
   "crypto_reserve": 0
 }
