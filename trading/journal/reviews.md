@@ -117,3 +117,10 @@
 * Replaced the 6 fixed broker stops (5% to 14% away, about $18,000 total risk) with GTC 5% trailing stops that rise with the price and lock in gains. Total risk now about $5,000. The bot counts trailing_stop as a broker stop. New entries keep their tested 3 ATR stop.
 * Widened to 8% trailing at the user's request, so normal swings do not stop out winners early; total risk about $8,000.
 * Final setup for the hold until 14 Oct 10:00 SGT (user request): each position split in 5 parts with OCO orders, take profit +3/+6/+10/+15/+20%, one stop loss −8% for all parts. Bot paused, hourly check ins cancelled to save tokens.
+
+## 2026-10-14 (daily review, 16:25 ET)
+
+* Alpaca equity about $89,800 (−10.2%). Chips fell again; max drawdown 12.5%. ibs sold META on its 5 day time stop and bought PLTR (stop $180.40).
+* Scoreboard (in sample / last 120 days): rsi2d PF 1.57 / 2.12, bbdip 1.85 / 38.8, ibs 1.57 / 1.22.
+* Tested user ideas: EMA20/50 pullback in strong trends with 2R/3R targets (PF 0.98 to 1.29 in sample, 0.63 to 0.74 out of sample: rejected); liquidity sweep of the 10/20 day low with 1.5R to 3R targets (best 20 day rr3: PF 1.37 / 1.20, 34% wins; weaker than the live three: not promoted).
+* No change.

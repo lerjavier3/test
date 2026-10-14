@@ -268,7 +268,61 @@ def turn_of_month(before, after):
     return f"turn of month -{before}/+{after} etf", "1Day", ETF3, 1100, run
 
 
+def _bracket(bars, i, stop, target, max_days):
+    """Exit price after entry at bars[i] close: stop or target on later highs/lows (stop first if both), else close at max_days."""
+    for j in range(i + 1, min(i + 1 + max_days, len(bars))):
+        if bars[j]["l"] <= stop:
+            return j, min(bars[j]["o"], stop)
+        if bars[j]["h"] >= target:
+            return j, max(bars[j]["o"], target)
+    j = min(i + max_days, len(bars) - 1)
+    return j, bars[j]["c"]
+
+
+def ema_pullback(n, rr):
+    """Daily, WIDE, strong trend (close > EMA50 > EMA200, EMA50 rising): low touches EMA(n) and close back above it
+    -> buy at the close; stop below the day's low minus 0.5 ATR; target rr x risk; max 15 days."""
+    def run(d):
+        out = []
+        for s, bars in d.items():
+            c = [b["c"] for b in bars]
+            e, e50, e200, a = S.ema(c, n), S.ema(c, 50), S.ema(c, 200), S.atr(bars)
+            i = 201
+            while i < len(bars) - 1:
+                b = bars[i]
+                if c[i] > e50[i] > e200[i] and e50[i] > e50[i - 5] and b["l"] <= e[i] < b["c"]:
+                    stop = b["l"] - 0.5 * a[i]
+                    j, px = _bracket(bars, i, stop, c[i] + rr * (c[i] - stop), 15)
+                    out.append(trade(s, bars[i + 1]["t"], "long", c[i], px))
+                    i = j
+                i += 1
+        return out
+    return f"ema{n} pullback rr{rr} wide", "1Day", S.WIDE, 1100, run
+
+
+def sweep_reversal(look, rr):
+    """Daily, WIDE, above SMA200: low undercuts the lowest low of the prior `look` days, close back above it
+    (liquidity sweep) -> buy at the close; stop below the day's low; target rr x risk; max 10 days."""
+    def run(d):
+        out = []
+        for s, bars in d.items():
+            c, i = [b["c"] for b in bars], 200
+            while i < len(bars) - 1:
+                prior = min(x["l"] for x in bars[i - look:i])
+                b = bars[i]
+                if b["l"] < prior < b["c"] and c[i] > sum(c[i - 199:i + 1]) / 200:
+                    stop = b["l"] * 0.998
+                    j, px = _bracket(bars, i, stop, c[i] + rr * (c[i] - stop), 10)
+                    out.append(trade(s, bars[i + 1]["t"], "long", c[i], px))
+                    i = j
+                i += 1
+        return out
+    return f"sweep {look}d low rr{rr} wide", "1Day", S.WIDE, 1100, run
+
+
 FAMILIES = {
+    "emapull": [ema_pullback(n, rr) for n, rr in itertools.product((20, 50), (2, 3))],
+    "sweep": [sweep_reversal(lk, rr) for lk, rr in itertools.product((10, 20), (1.5, 2, 3))],
     "highs": [high_breakout(n, h) for n, h in itertools.product((20, 50, 252), (5, 10))],
     "tom": [turn_of_month(b, a) for b, a in itertools.product((1, 3, 4), (1, 3))],
     "streak": [down_streak(n) for n in (3, 4, 5)],
