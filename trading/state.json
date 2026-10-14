@@ -11,10 +11,10 @@
   "challenge_active": true,
   "options_level": 3,
   "peak_equity": 102073.19,
-  "trough_equity": 89002.57,
-  "max_drawdown_pct": 12.81,
-  "last_equity": 89036.58,
-  "last_run_et": "2026-10-14T18:08-04:00",
+  "trough_equity": 88240.88,
+  "max_drawdown_pct": 13.55,
+  "last_equity": 88240.88,
+  "last_run_et": "2026-10-14T18:13-04:00",
   "mental_stops": {
     "AVGO": {
       "stop": 361.49,
@@ -22,10 +22,6 @@
     },
     "QCOM": {
       "stop": 154.72,
-      "side": "buy"
-    },
-    "SMH": {
-      "stop": 560.77,
       "side": "buy"
     },
     "NVDA": {
@@ -957,7 +953,8 @@
     1.9,
     1.9,
     1.9,
-    1.9
+    1.9,
+    1.91
   ],
   "last_options_day": "2026-10-06",
   "weights": {
@@ -972,12 +969,6 @@
       "side": "long",
       "stop": 154.7217,
       "entry_time": "2026-10-07T15:52-04:00"
-    },
-    "SMH": {
-      "strategy": "rsi2d",
-      "side": "long",
-      "stop": 560.7713,
-      "entry_time": "2026-10-08T15:50-04:00"
     },
     "NVDA": {
       "strategy": "ibs",
@@ -1016,7 +1007,8 @@
     "META": "2026-10-14T16:54:42.685423-04:00",
     "COIN": "2026-10-08T10:33:29.847991-04:00",
     "INTC": "2026-10-09T10:41:18.485946-04:00",
-    "ORCL": "2026-10-09T10:41:18.485946-04:00"
+    "ORCL": "2026-10-09T10:41:18.485946-04:00",
+    "SMH": "2026-10-14T19:13:18.126736-04:00"
   },
   "orb_done": {
     "2026-10-14": []
