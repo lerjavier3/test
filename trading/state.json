@@ -13,8 +13,8 @@
   "peak_equity": 102073.19,
   "trough_equity": 89338.61,
   "max_drawdown_pct": 12.48,
-  "last_equity": 89338.61,
-  "last_run_et": "2026-10-14T15:03-04:00",
+  "last_equity": 89443.37,
+  "last_run_et": "2026-10-14T15:08-04:00",
   "mental_stops": {
     "AVGO": {
       "stop": 361.49,
@@ -936,6 +936,7 @@
     1.91,
     1.91,
     1.91,
+    1.92,
     1.92
   ],
   "last_options_day": "2026-10-06",
