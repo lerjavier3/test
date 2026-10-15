@@ -11,10 +11,10 @@
   "challenge_active": true,
   "options_level": 3,
   "peak_equity": 102073.19,
-  "trough_equity": 85565.06,
-  "max_drawdown_pct": 16.17,
-  "last_equity": 85819.96,
-  "last_run_et": "2026-10-15T09:24-04:00",
+  "trough_equity": 85466.33,
+  "max_drawdown_pct": 16.27,
+  "last_equity": 85466.33,
+  "last_run_et": "2026-10-15T09:39-04:00",
   "mental_stops": {
     "AVGO": {
       "stop": 361.49,
@@ -1020,7 +1020,8 @@
     1.43,
     1.44,
     1.44,
-    1.44
+    1.44,
+    0.82
   ],
   "last_options_day": "2026-10-06",
   "weights": {
@@ -1041,18 +1042,6 @@
       "side": "long",
       "stop": 213.5166,
       "entry_time": "2026-10-08T15:50-04:00"
-    },
-    "AMD": {
-      "strategy": "rsi2d",
-      "side": "long",
-      "stop": 536.451,
-      "entry_time": "2026-10-09T15:52-04:00"
-    },
-    "INTC": {
-      "strategy": "rsi2d",
-      "side": "long",
-      "stop": 86.761,
-      "entry_time": "2026-10-09T15:52-04:00"
     },
     "PLTR": {
       "strategy": "ibs",
