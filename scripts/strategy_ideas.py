@@ -320,7 +320,53 @@ def sweep_reversal(look, rr):
     return f"sweep {look}d low rr{rr} wide", "1Day", S.WIDE, 1100, run
 
 
+def support_bounce(look, rr):
+    """Daily, WIDE, above SMA200: low within 1% of the lowest low of the prior `look` days (support), close in the
+    top half of the day's range (bullish reaction) -> buy at the close; stop 1% below that support; target rr x risk."""
+    def run(d):
+        out = []
+        for s, bars in d.items():
+            c, i = [b["c"] for b in bars], 200
+            while i < len(bars) - 1:
+                sup = min(x["l"] for x in bars[i - look:i])
+                b = bars[i]
+                rng = b["h"] - b["l"]
+                if rng > 0 and b["l"] <= sup * 1.01 and (b["c"] - b["l"]) / rng > 0.5 and c[i] > sum(c[i - 199:i + 1]) / 200:
+                    stop = sup * 0.99
+                    if stop < c[i]:
+                        j, px = _bracket(bars, i, stop, c[i] + rr * (c[i] - stop), 10)
+                        out.append(trade(s, bars[i + 1]["t"], "long", c[i], px))
+                        i = j
+                i += 1
+        return out
+    return f"support {look}d bounce rr{rr} wide", "1Day", S.WIDE, 1100, run
+
+
+def resistance_breakout(look, vol):
+    """Daily, WIDE: close above the highest high of the prior `look` days (resistance) on volume > vol x 20 day
+    average -> buy at the close; stop at the 10 day low; exit on a close below the 10 day low (no fixed target)."""
+    def run(d):
+        out = []
+        for s, bars in d.items():
+            i = max(look, 20)
+            while i < len(bars) - 1:
+                b = bars[i]
+                res = max(x["h"] for x in bars[i - look:i])
+                av = sum(x["v"] for x in bars[i - 20:i]) / 20
+                if b["c"] > res and b["v"] > vol * av:
+                    j = i + 1
+                    while j < len(bars) - 1 and bars[j]["c"] >= min(x["l"] for x in bars[j - 10:j]):
+                        j += 1
+                    out.append(trade(s, bars[i + 1]["t"], "long", b["c"], bars[j]["c"]))
+                    i = j
+                i += 1
+        return out
+    return f"resistance {look}d breakout vol{vol} wide", "1Day", S.WIDE, 1100, run
+
+
 FAMILIES = {
+    "support": [support_bounce(lk, rr) for lk, rr in itertools.product((20, 60), (1.5, 2, 3))],
+    "resist": [resistance_breakout(lk, v) for lk, v in itertools.product((20, 60), (1.5, 2.0))],
     "emapull": [ema_pullback(n, rr) for n, rr in itertools.product((20, 50), (2, 3))],
     "sweep": [sweep_reversal(lk, rr) for lk, rr in itertools.product((10, 20), (1.5, 2, 3))],
     "highs": [high_breakout(n, h) for n, h in itertools.product((20, 50, 252), (5, 10))],

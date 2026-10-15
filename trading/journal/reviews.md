@@ -131,3 +131,9 @@
 * Tested market filters on the live strategies (1100 days, last 120 days out of sample): requiring SPY above SMA50, SPY or QQQ above SMA20, or skipping stocks down more than 10% in 10 days all made results worse (rsi2d out of sample PF 1.60 unfiltered vs 0.74 to 1.55 filtered). Mean reversion earns most when the market is weak, so no market filter.
 * Found: ibs has decayed, out of sample PF now 0.97 (−8%) and worse with any filter. rsi2d 1.48 / 1.60 and bbdip 1.72 / 10.3 still hold. A+ setups still PF 2.99 / 4.34 (rsi2d) but only 6 recent trades.
 * Change: ibs weight 0 (it only manages PLTR now). Weights rsi2d 0.6, bbdip 0.4.
+
+## 2026-10-15 (daily review, 16:25 ET)
+
+* Alpaca equity about $85,770 (−14.2%). INTC, AMD and NVDA hit their stops at the open; QCOM sold at its rsi2d exit ($178.62, +$1). Near the close: rsi2d bought QQQ and NVDA, bbdip bought AMD and XLK (semis cap held at 2). 5 positions, 1.95x.
+* Tested support and resistance (WIDE, 1100 days, last 120 days out of sample): support bounce (low within 1% of the 20 day low, bullish close, stop 1% under support, 1.5R to 3R target): PF 1.13 to 1.25 in sample, 1.77 to 1.90 out of sample, 42% to 55% wins. Resistance breakout (close above the 20/60 day high on 1.5x to 2x volume, exit below the 10 day low): PF 2.06 to 2.98 in sample but 0 to 1.17 out of sample (failed in the recent choppy market).
+* No change: support bounce is weaker than rsi2d (1.48) and bbdip (1.72) in sample; breakouts fail recently.
