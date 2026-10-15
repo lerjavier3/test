@@ -124,3 +124,10 @@
 * Scoreboard (in sample / last 120 days): rsi2d PF 1.57 / 2.12, bbdip 1.85 / 38.8, ibs 1.57 / 1.22.
 * Tested user ideas: EMA20/50 pullback in strong trends with 2R/3R targets (PF 0.98 to 1.29 in sample, 0.63 to 0.74 out of sample: rejected); liquidity sweep of the 10/20 day low with 1.5R to 3R targets (best 20 day rr3: PF 1.37 / 1.20, 34% wins; weaker than the live three: not promoted).
 * No change.
+
+## 2026-10-15 (07:30 ET, user: performance is bad, study the market and fix)
+
+* Alpaca equity $85,576 (−14.4%). Market study: SPY 766 just under its SMA20/50 (770/767) but above SMA200; QQQ −3.2% in 10 days, below SMA20/50; SMH −11.8% in 10 days, below SMA20/50, near its 20 day low 542.5 (support). INTC −23% in 10 days (falling knife), NVDA and AMD at their 20 day lows. The losses come from buying dips in chips during a sharp sector sell off.
+* Tested market filters on the live strategies (1100 days, last 120 days out of sample): requiring SPY above SMA50, SPY or QQQ above SMA20, or skipping stocks down more than 10% in 10 days all made results worse (rsi2d out of sample PF 1.60 unfiltered vs 0.74 to 1.55 filtered). Mean reversion earns most when the market is weak, so no market filter.
+* Found: ibs has decayed, out of sample PF now 0.97 (−8%) and worse with any filter. rsi2d 1.48 / 1.60 and bbdip 1.72 / 10.3 still hold. A+ setups still PF 2.99 / 4.34 (rsi2d) but only 6 recent trades.
+* Change: ibs weight 0 (it only manages PLTR now). Weights rsi2d 0.6, bbdip 0.4.

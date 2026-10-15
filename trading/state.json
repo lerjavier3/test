@@ -1027,9 +1027,9 @@
   ],
   "last_options_day": "2026-10-06",
   "weights": {
-    "rsi2d": 0.4,
-    "bbdip": 0.3,
-    "ibs": 0.3,
+    "rsi2d": 0.6,
+    "bbdip": 0.4,
+    "ibs": 0,
     "reversal": 0
   },
   "owners": {
