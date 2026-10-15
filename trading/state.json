@@ -13,19 +13,15 @@
   "peak_equity": 102073.19,
   "trough_equity": 84711.9,
   "max_drawdown_pct": 17.01,
-  "last_equity": 85908.36,
-  "last_run_et": "2026-10-15T15:47-04:00",
+  "last_equity": 85843.6,
+  "last_run_et": "2026-10-15T15:52-04:00",
   "mental_stops": {
     "AVGO": {
       "stop": 361.49,
       "side": "buy"
     },
-    "QCOM": {
-      "stop": 154.72,
-      "side": "buy"
-    },
     "AMD": {
-      "stop": 536.45,
+      "stop": 483.99,
       "side": "buy"
     },
     "INTC": {
@@ -34,6 +30,18 @@
     },
     "PLTR": {
       "stop": 180.4,
+      "side": "buy"
+    },
+    "QQQ": {
+      "stop": 698.8,
+      "side": "buy"
+    },
+    "NVDA": {
+      "stop": 199.33,
+      "side": "buy"
+    },
+    "XLK": {
+      "stop": 178.92,
       "side": "buy"
     }
   },
@@ -1091,6 +1099,7 @@
     0.46,
     0.46,
     0.46,
+    0.46,
     0.46
   ],
   "last_options_day": "2026-10-06",
@@ -1101,17 +1110,35 @@
     "reversal": 0
   },
   "owners": {
-    "QCOM": {
-      "strategy": "rsi2d",
-      "side": "long",
-      "stop": 154.7217,
-      "entry_time": "2026-10-07T15:52-04:00"
-    },
     "PLTR": {
       "strategy": "ibs",
       "side": "long",
       "stop": 180.4044,
       "entry_time": "2026-10-14T15:54-04:00"
+    },
+    "QQQ": {
+      "strategy": "rsi2d",
+      "side": "long",
+      "stop": 698.7984,
+      "entry_time": "2026-10-15T15:52-04:00"
+    },
+    "NVDA": {
+      "strategy": "rsi2d",
+      "side": "long",
+      "stop": 199.3254,
+      "entry_time": "2026-10-15T15:52-04:00"
+    },
+    "AMD": {
+      "strategy": "bbdip",
+      "side": "long",
+      "stop": 483.9851,
+      "entry_time": "2026-10-15T15:52-04:00"
+    },
+    "XLK": {
+      "strategy": "bbdip",
+      "side": "long",
+      "stop": 178.9228,
+      "entry_time": "2026-10-15T15:52-04:00"
     }
   },
   "cooldown": {
@@ -1127,7 +1154,8 @@
     "COIN": "2026-10-08T10:33:29.847991-04:00",
     "INTC": "2026-10-09T10:41:18.485946-04:00",
     "ORCL": "2026-10-09T10:41:18.485946-04:00",
-    "SMH": "2026-10-14T19:13:18.126736-04:00"
+    "SMH": "2026-10-14T19:13:18.126736-04:00",
+    "QCOM": "2026-10-15T16:52:21.046672-04:00"
   },
   "orb_done": {
     "2026-10-15": []
