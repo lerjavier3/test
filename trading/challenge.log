@@ -1072,3 +1072,4 @@ max minutes reached, exiting for restart
 [10-15 09:49] 09:49 ET regular: equity 85,337, peak 102,073, max dd 16.4%, lev 0.82x, progress -4%, positions 3
 [10-15 09:50] 09:50 ET regular: equity 85,195, peak 102,073, max dd 16.54%, lev 0.82x, progress -4%, positions 3
 [10-15 09:56] 09:56 ET regular: equity 84,725, peak 102,073, max dd 17.0%, lev 0.82x, progress -4%, positions 2 | filled 147 @ 213.06: sell 147 NVDA market (close: stop 213.52 hit at 213.085) [ch-ibs-NVDA-202610150956-1]
+[10-15 10:01] 10:01 ET regular: equity 85,060, peak 102,073, max dd 17.0%, lev 0.45x, progress -4%, positions 2
