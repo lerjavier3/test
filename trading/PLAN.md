@@ -110,7 +110,7 @@ Paper only guard (refuses unless the paper endpoint, `ALPACA_PAPER` not false, `
 
 ## 11. Current state for resuming (2026-10-15 07:45 ET)
 
-* Open (2026-10-15 10:00 ET): PLTR 101 (ibs, broker stop $180.40) and QCOM 107 (OCO parts: stop $160.58, take profits from $185.01 up). INTC, AMD and NVDA hit their stops on 2026-10-15. Every share has a broker exit. One shot `send_later` at 2026-10-20 08:35 UTC checks the end, the summary and sends the final report.
+* Open (2026-10-16 08:24 UTC, equity $85,718): AMD 69, NVDA 147, PLTR 101, QQQ 94, XLK 42. Every share has a broker exit (bot stops or OCO). One shot `send_later` `trig_01JuNccCsnoNQ8U5T3khhV8g` at 2026-10-20 08:35 UTC checks the end, the summary and sends the final report.
 * Active routines: daily report `trig_01Phf3qgZKsGRCrbriVpr7ju` (21:58 SGT), pre-close guard `trig_01PJMDRveEeqCi7hBfxMqr4S` (15:32 ET weekdays), daily review `trig_017tPdGK3h27Ytem1b7Uovx3` (16:20 ET weekdays). No other check ins (removed to save tokens).
 * Each bot exit notification: one Bash call to restart (`python3 scripts/challenge_run.py --loop --max-minutes 110 >> trading/challenge.log 2>&1`, run_in_background, timeout 7200000), reply "ok".
 * User style: no dashes in answers; short replies; honest numbers from Alpaca; 2 line report; push hard but every trade has a broker exit; backtest every idea on 1+ year with the last 120 days held out, unbiased.
