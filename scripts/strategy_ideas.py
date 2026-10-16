@@ -364,7 +364,56 @@ def resistance_breakout(look, vol):
     return f"resistance {look}d breakout vol{vol} wide", "1Day", S.WIDE, 1100, run
 
 
+def double_bottom(look, rr):
+    """Daily, WIDE: two lows within 2% of each other at least 5 days apart in the prior `look` days, close crosses
+    above the highest high between them (neckline) -> buy at the close; stop under the lower low; target rr x risk."""
+    def run(d):
+        out = []
+        for s, bars in d.items():
+            i = look + 1
+            while i < len(bars) - 1:
+                w = bars[i - look:i]
+                a = min(range(look), key=lambda k: w[k]["l"])
+                far = [k for k in range(look) if abs(k - a) >= 5]
+                if far:
+                    b2 = min(far, key=lambda k: w[k]["l"])
+                    lo, hi = sorted((a, b2))
+                    neck = max(x["h"] for x in w[lo:hi + 1])
+                    if (w[b2]["l"] <= w[a]["l"] * 1.02 and hi < look - 1
+                            and bars[i - 1]["c"] <= neck < bars[i]["c"]):
+                        stop = w[a]["l"] * 0.995
+                        j, px = _bracket(bars, i, stop, bars[i]["c"] + rr * (bars[i]["c"] - stop), 15)
+                        out.append(trade(s, bars[i + 1]["t"], "long", bars[i]["c"], px))
+                        i = j
+                i += 1
+        return out
+    return f"double bottom {look}d rr{rr} wide", "1Day", S.WIDE, 1100, run
+
+
+def golden_cross(exit_n):
+    """Daily, WIDE: SMA50 crosses above SMA200 -> buy at the close; stop 3 ATR; exit on a close below SMA(exit_n)."""
+    def run(d):
+        out = []
+        for s, bars in d.items():
+            c, a = [b["c"] for b in bars], S.atr(bars)
+            sma = lambda n, k: sum(c[k - n + 1:k + 1]) / n  # noqa: E731
+            i = 201
+            while i < len(bars) - 1:
+                if sma(50, i - 1) <= sma(200, i - 1) and sma(50, i) > sma(200, i):
+                    stop, j = c[i] - 3 * a[i], i + 1
+                    while j < len(bars) - 1 and bars[j]["l"] > stop and c[j] >= sma(exit_n, j):
+                        j += 1
+                    px = min(bars[j]["o"], stop) if bars[j]["l"] <= stop else c[j]
+                    out.append(trade(s, bars[i + 1]["t"], "long", c[i], px))
+                    i = j
+                i += 1
+        return out
+    return f"golden cross exit sma{exit_n} wide", "1Day", S.WIDE, 1100, run
+
+
 FAMILIES = {
+    "dbottom": [double_bottom(lk, rr) for lk, rr in itertools.product((30, 60), (1.5, 2, 3))],
+    "golden": [golden_cross(n) for n in (20, 50)],
     "support": [support_bounce(lk, rr) for lk, rr in itertools.product((20, 60), (1.5, 2, 3))],
     "resist": [resistance_breakout(lk, v) for lk, v in itertools.product((20, 60), (1.5, 2.0))],
     "emapull": [ema_pullback(n, rr) for n, rr in itertools.product((20, 50), (2, 3))],

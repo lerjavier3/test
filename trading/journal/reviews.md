@@ -137,3 +137,9 @@
 * Alpaca equity about $85,770 (−14.2%). INTC, AMD and NVDA hit their stops at the open; QCOM sold at its rsi2d exit ($178.62, +$1). Near the close: rsi2d bought QQQ and NVDA, bbdip bought AMD and XLK (semis cap held at 2). 5 positions, 1.95x.
 * Tested support and resistance (WIDE, 1100 days, last 120 days out of sample): support bounce (low within 1% of the 20 day low, bullish close, stop 1% under support, 1.5R to 3R target): PF 1.13 to 1.25 in sample, 1.77 to 1.90 out of sample, 42% to 55% wins. Resistance breakout (close above the 20/60 day high on 1.5x to 2x volume, exit below the 10 day low): PF 2.06 to 2.98 in sample but 0 to 1.17 out of sample (failed in the recent choppy market).
 * No change: support bounce is weaker than rsi2d (1.48) and bbdip (1.72) in sample; breakouts fail recently.
+
+## 2026-10-16 (daily review, 16:20 ET)
+
+* Alpaca equity about $79,570 (−20.4%, max drawdown 22.2%). Positions drifted down all day; at 15:46 the bot sold PLTR 101 @ $185.34 (bought $200.62) to trim gross leverage back under 1.97x. 4 positions left (AMD, NVDA, QQQ, XLK), 1.79x.
+* Tested (WIDE, 1100 days, last 120 days out of sample): double bottom breakout (two lows within 2%, 5+ days apart in 30/60 days, close over the neckline, stop under the low, 1.5R to 3R target): PF 1.04 to 1.16 in sample, 0.78 to 0.88 out of sample. Golden cross (SMA50 over SMA200, 3 ATR stop, exit below SMA20/50): PF 2.66 to 3.42 in sample on 44 trades, 0.25 to 0.95 out of sample.
+* No change: both fail out of sample. rsi2d live is 13 trades, 2 wins, far below its backtest (70% wins); with one stock session left there is no time to judge a replacement, so weights stay rsi2d 0.6 / bbdip 0.4.

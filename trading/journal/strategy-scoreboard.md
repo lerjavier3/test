@@ -1,39 +1,39 @@
 # Strategy scoreboard (PAPER challenge)
 
-Updated 2026-10-14 16:20 ET. Backtest: 400 days of Alpaca bars (1100 for daily strategies), in sample before 2026-06-16, out of sample after (never tuned on). Per trade returns, unlevered, after costs. Live: Alpaca fills since the challenge started.
+Updated 2026-10-16 16:21 ET. Backtest: 400 days of Alpaca bars (1100 for daily strategies), in sample before 2026-06-18, out of sample after (never tuned on). Per trade returns, unlevered, after costs. Live: Alpaca fills since the challenge started.
 
 | Strategy | Period | Trades | Win rate | Avg win / avg loss | Profit (sum of trade returns) | Profit factor | Indicators |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| trend | backtest in sample | 2531 | 26% | +2.84% / -1.35% | -668.6% | 0.74 | EMA20, EMA50, ATR14 (1 hour bars) |
-| trend | backtest out of sample | 1176 | 27% | +2.71% / -1.21% | -183.8% | 0.82 | EMA20, EMA50, ATR14 (1 hour bars) |
-| rsi2 | backtest in sample | 1147 | 53% | +0.52% / -0.99% | -205.2% | 0.61 | RSI2, EMA200, EMA5, ATR14 (1 hour bars) |
-| rsi2 | backtest out of sample | 585 | 51% | +0.50% / -0.84% | -96.3% | 0.60 | RSI2, EMA200, EMA5, ATR14 (1 hour bars) |
-| orb | backtest in sample | 531 | 51% | +0.79% / -0.80% | +0.5% | 1.00 | 30 minute opening range (5 minute bars) |
-| orb | backtest out of sample | 211 | 44% | +0.79% / -0.69% | -9.7% | 0.88 | 30 minute opening range (5 minute bars) |
-| breakout | backtest in sample | 277 | 28% | +4.44% / -1.51% | +45.4% | 1.15 | 50 bar high, EMA200, EMA50, ATR14 (1 hour bars) |
-| breakout | backtest out of sample | 126 | 32% | +3.12% / -1.47% | -1.1% | 0.99 | 50 bar high, EMA200, EMA50, ATR14 (1 hour bars) |
-| overnight | backtest in sample | 1133 | 48% | +0.96% / -0.85% | +17.0% | 1.03 | SMA20 (daily bars) |
-| overnight | backtest out of sample | 539 | 49% | +0.96% / -0.96% | -16.4% | 0.94 | SMA20 (daily bars) |
-| ibs | backtest in sample | 851 | 65% | +2.67% / -3.08% | +533.3% | 1.57 | IBS = (close - low) / (high - low), SMA200, ATR14 (daily bars) |
-| ibs | backtest out of sample | 177 | 56% | +2.87% / -3.05% | +52.5% | 1.22 | IBS = (close - low) / (high - low), SMA200, ATR14 (daily bars) |
-| rsi2d | backtest in sample | 572 | 70% | +2.42% / -3.65% | +353.4% | 1.57 | RSI2, SMA200, SMA5, ATR14 (daily bars) |
-| rsi2d | backtest out of sample | 107 | 74% | +2.03% / -2.71% | +84.7% | 2.12 | RSI2, SMA200, SMA5, ATR14 (daily bars) |
-| reversal | backtest in sample | 1340 | 52% | +1.28% / -1.24% | +97.9% | 1.12 | 1 day return, ranked across the universe (daily bars) |
-| reversal | backtest out of sample | 166 | 55% | +1.32% / -1.45% | +11.7% | 1.11 | 1 day return, ranked across the universe (daily bars) |
-| bbdip | backtest in sample | 221 | 66% | +2.89% / -3.05% | +193.8% | 1.85 | SMA20, 20 day standard deviation (Bollinger 20, 2), SMA200, ATR14 (daily bars) |
-| bbdip | backtest out of sample | 26 | 77% | +3.26% / -0.28% | +63.6% | 38.76 | SMA20, 20 day standard deviation (Bollinger 20, 2), SMA200, ATR14 (daily bars) |
+| trend | backtest in sample | 2531 | 26% | +2.85% / -1.35% | -668.2% | 0.74 | EMA20, EMA50, ATR14 (1 hour bars) |
+| trend | backtest out of sample | 1180 | 27% | +2.68% / -1.21% | -174.9% | 0.83 | EMA20, EMA50, ATR14 (1 hour bars) |
+| rsi2 | backtest in sample | 1141 | 54% | +0.53% / -1.00% | -202.6% | 0.62 | RSI2, EMA200, EMA5, ATR14 (1 hour bars) |
+| rsi2 | backtest out of sample | 577 | 50% | +0.50% / -0.83% | -97.1% | 0.60 | RSI2, EMA200, EMA5, ATR14 (1 hour bars) |
+| orb | backtest in sample | 530 | 51% | +0.78% / -0.81% | -3.1% | 0.99 | 30 minute opening range (5 minute bars) |
+| orb | backtest out of sample | 212 | 45% | +0.80% / -0.68% | -3.7% | 0.95 | 30 minute opening range (5 minute bars) |
+| breakout | backtest in sample | 277 | 28% | +4.47% / -1.51% | +42.9% | 1.14 | 50 bar high, EMA200, EMA50, ATR14 (1 hour bars) |
+| breakout | backtest out of sample | 128 | 31% | +3.12% / -1.47% | -4.2% | 0.97 | 50 bar high, EMA200, EMA50, ATR14 (1 hour bars) |
+| overnight | backtest in sample | 1119 | 48% | +0.98% / -0.86% | +28.9% | 1.06 | SMA20 (daily bars) |
+| overnight | backtest out of sample | 544 | 48% | +0.93% / -0.96% | -28.7% | 0.89 | SMA20 (daily bars) |
+| ibs | backtest in sample | 855 | 65% | +2.67% / -2.93% | +608.4% | 1.69 | IBS = (close - low) / (high - low), SMA200, ATR14 (daily bars) |
+| ibs | backtest out of sample | 171 | 54% | +2.53% / -3.13% | -9.2% | 0.96 | IBS = (close - low) / (high - low), SMA200, ATR14 (daily bars) |
+| rsi2d | backtest in sample | 569 | 70% | +2.31% / -3.65% | +302.1% | 1.49 | RSI2, SMA200, SMA5, ATR14 (daily bars) |
+| rsi2d | backtest out of sample | 105 | 70% | +2.12% / -3.31% | +54.4% | 1.53 | RSI2, SMA200, SMA5, ATR14 (daily bars) |
+| reversal | backtest in sample | 1340 | 52% | +1.30% / -1.24% | +104.9% | 1.13 | 1 day return, ranked across the universe (daily bars) |
+| reversal | backtest out of sample | 166 | 53% | +1.26% / -1.50% | -5.9% | 0.95 | 1 day return, ranked across the universe (daily bars) |
+| bbdip | backtest in sample | 218 | 65% | +2.71% / -2.96% | +160.2% | 1.71 | SMA20, 20 day standard deviation (Bollinger 20, 2), SMA200, ATR14 (daily bars) |
+| bbdip | backtest out of sample | 29 | 69% | +3.26% / -1.80% | +49.0% | 4.02 | SMA20, 20 day standard deviation (Bollinger 20, 2), SMA200, ATR14 (daily bars) |
 | trend | live | 7 | 0% | +0.00% / -0.51% | -3.5% | 0.00 | realized P&L $-1,326 |
 | rsi2 | live | 0 | | | | | realized P&L $0 |
 | orb | live | 0 | | | | | realized P&L $0 |
 | breakout | live | 2 | 0% | +0.00% / -0.94% | -1.9% | 0.00 | realized P&L $-1,162 |
 | overnight | live | 4 | 0% | +0.00% / -0.76% | -3.1% | 0.00 | realized P&L $-266 |
-| ibs | live | 2 | 100% | +4.41% / +0.00% | +8.8% | inf | realized P&L $852 |
-| rsi2d | live | 1 | 100% | +1.53% / +0.00% | +1.5% | inf | realized P&L $70 |
+| ibs | live | 4 | 50% | +4.41% / -7.63% | -6.4% | 0.58 | realized P&L $-3,280 |
+| rsi2d | live | 13 | 15% | +1.20% / -10.81% | -116.5% | 0.02 | realized P&L $-9,856 |
 | reversal | live | 3 | 67% | +2.20% / -1.47% | +2.9% | 2.98 | realized P&L $292 |
 | bbdip | live | 0 | | | | | realized P&L $0 |
 | opt | live | 0 | | | | | realized P&L $0 |
 
-Allocation weights now: {'rsi2d': 0.4, 'bbdip': 0.3, 'ibs': 0.3, 'reversal': 0}
+Allocation weights now: {'rsi2d': 0.6, 'bbdip': 0.4, 'ibs': 0, 'reversal': 0}
 
 ## Rules
 
