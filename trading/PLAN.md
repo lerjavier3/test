@@ -116,3 +116,8 @@ Paper only guard (refuses unless the paper endpoint, `ALPACA_PAPER` not false, `
 * User style: no dashes in answers; short replies; honest numbers from Alpaca; 2 line report; push hard but every trade has a broker exit; backtest every idea on 1+ year with the last 120 days held out, unbiased.
 * Next review to do: support bounce (buy at the 20/60 day low or prior swing low with a bullish close) and resistance breakout (close above the 20/60 day high with volume), then the rest of the research queue.
 * End: last stock day 2026-10-19 (close at 15:50 ET); final report `trading/journal/challenge-summary.md` by 2026-10-20 16:30 SGT with exact rules per strategy.
+
+## 12. STOPPED by the user (2026-10-17)
+
+* The user ended the challenge early. Bot stopped, `challenge_active` false, all routines and the end check disabled. Do not restart anything.
+* Positions left in the Alpaca paper account on purpose (fake money): AMD 69, NVDA 147, QQQ 94, XLK 42, each with a broker stop. Equity about $79,616 (−20.4%), max drawdown 22.5%.
